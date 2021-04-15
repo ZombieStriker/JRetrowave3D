@@ -25,9 +25,9 @@ public class Game {
 		}
 
 
-		Cube cube = new Cube(new Location(0,0,20),2,0.5,2);
+		Cube cube = new Cube(new Location(0,0,20),2,2,2);
 		world.toRender.add(cube);
-		Prisim prism = new Prisim(new Location(8,0,20),2,0.5,2);
+		Prisim prism = new Prisim(new Location(8,0,20),2,2,2);
 		world.toRender.add(prism);
 
 		//world.toRender.add(triangle);

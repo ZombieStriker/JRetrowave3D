@@ -2,8 +2,9 @@ package me.zombie_striker.game.engine.geometry;
 
 import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.Plane;
+import me.zombie_striker.game.engine.data.Triangle;
 
-public interface RenderableObject {
+public interface RenderableObject extends Comparable {
 
-	public Plane[] getObjectsToRender(World world);
+	public Triangle[] getObjectsToRender(World world);
 }

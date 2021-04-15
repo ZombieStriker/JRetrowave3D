@@ -31,7 +31,7 @@ public class Main {
 
 			int fps = (int) (1000.0/(elapsed));
 
-			window.getDisplay().image.getGraphics().drawString("FPS: "+fps,10,10);
+			window.getDisplay().image.getGraphics().drawString("FPS: "+fps +" : "+(end%100),10,10);
 
 			window.repaint();
 			try {

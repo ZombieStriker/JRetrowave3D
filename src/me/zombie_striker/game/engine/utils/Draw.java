@@ -1,5 +1,6 @@
 package me.zombie_striker.game.engine.utils;
 
+import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.Location2D;
 import me.zombie_striker.game.engine.data.Triangle;
 
@@ -208,28 +209,67 @@ public class Draw {
 	}
 
 
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, int x, int y, Triangle triangle, Color color, boolean istop) {
+	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, Color color, boolean istop) {
 
 		if (color != null)
 			g.setColor(color);
+		double cos = Math.cos(Math.toRadians(world.camera.getYaw()));
+		double sin = Math.sin(Math.toRadians(world.camera.getYaw()));
 
-		Location2D point = triangle.getPoints()[0];
+		/*Location2D point = triangle.getPoints()[0];
 		Location2D otherPoint = triangle.getPoints()[1];
-		Location2D otherPoint3 = triangle.getPoints()[2];
+		Location2D otherPoint3 = triangle.getPoints()[2];*/
+
+		double zdif = cos * (triangle.getPoints()[0].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[0].getX() - world.camera.getPersonLocation().getX()));
+		double ydif = triangle.getPoints()[0].getY() - world.camera.getPersonLocation().getY();
+		double xdif = cos * (triangle.getPoints()[0].getX() - world.camera.getPersonLocation().getX()) + (sin * (triangle.getPoints()[0].getZ() - world.camera.getPersonLocation().getZ()));
+
+		double zdif1 = cos * (triangle.getPoints()[1].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[1].getX() - world.camera.getPersonLocation().getX()));
+		double ydif1 = triangle.getPoints()[1].getY() - world.camera.getPersonLocation().getY();
+		double xdif1 = cos * (triangle.getPoints()[1].getX() - world.camera.getPersonLocation().getX()) + (sin * (triangle.getPoints()[1].getZ() - world.camera.getPersonLocation().getZ()));
+
+		double zdif2 = cos * (triangle.getPoints()[2].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[2].getX() - world.camera.getPersonLocation().getX()));
+		double ydif2 = triangle.getPoints()[2].getY() - world.camera.getPersonLocation().getY();
+		double xdif2 = cos * (triangle.getPoints()[2].getX() - world.camera.getPersonLocation().getX())+ (sin * (triangle.getPoints()[2].getZ() - world.camera.getPersonLocation().getZ()));
+
+
+		Location2D point = new Location2D((int) ((xdif * bi.getHeight() / zdif)), (int) -(ydif * bi.getHeight() / zdif));
+		Location2D otherPoint = new Location2D((int) ((xdif1 * bi.getHeight() / zdif1)), (int) -(ydif1 * bi.getHeight() / zdif1));
+		Location2D otherPoint3 = new Location2D((int) ((xdif2 * bi.getHeight() / zdif2)), (int) -(ydif2 * bi.getHeight() / zdif2));
+
+			/*System.out.println("P1 X is "+point.getX());
+		System.out.println("P1 Y is "+point.getY());
+		System.out.println("P2 X is "+otherPoint.getX());
+		System.out.println("P2 Y is "+otherPoint.getY());
+		System.out.println("P3 X is "+otherPoint3.getX());
+		System.out.println("P3 Y is "+otherPoint3.getY());*/
+
+		if (point.getX() > bi.getWidth())
+			return;
+		if (point.getX() < -bi.getWidth())
+			return;
+
+		if (otherPoint.getX() > bi.getWidth())
+			return;
+		if (otherPoint.getX() < -bi.getWidth())
+			return;
+
+		if (otherPoint3.getX() > bi.getWidth())
+			return;
+		if (otherPoint3.getX() < -bi.getWidth())
+			return;
+
 		fillTriangle(bi, g, x, y, point, otherPoint, otherPoint3, istop);
 
 		//if (color == null)
 		g.setColor(new Color(255, 0, 0));
 		drawLine(g, point.getX() + x, point.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
-		otherPoint = triangle.getPoints()[2];
 		//if (color == null)
 		g.setColor(new Color(0, 255, 0));
-		drawLine(g, point.getX() + x, point.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
-		point = triangle.getPoints()[1];
-		otherPoint = triangle.getPoints()[2];
+		drawLine(g, point.getX() + x, point.getY() + y, otherPoint3.getX() + x, otherPoint3.getY() + y);
 		//if (color == null)
 		g.setColor(new Color(0, 0, 255));
-		drawLine(g, point.getX() + x, point.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
+		drawLine(g, otherPoint3.getX() + x, otherPoint3.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
 	}
 
 }
