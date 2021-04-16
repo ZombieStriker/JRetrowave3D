@@ -2,25 +2,15 @@ package me.zombie_striker.game.engine.utils;
 
 import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.Location2D;
+import me.zombie_striker.game.engine.data.Material;
+import me.zombie_striker.game.engine.data.TextureStitchingAlgo;
 import me.zombie_striker.game.engine.data.Triangle;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Draw {
-
-
-	private static BufferedImage testTexture;
-
-	static {
-		try {
-			testTexture = ImageIO.read(Draw.class.getResourceAsStream("/textures/test.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	public static void drawLine(Graphics2D bi, int startX, int startY, int endX, int endY) {
@@ -84,7 +74,7 @@ public class Draw {
 	}
 
 
-	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Location2D p1, Location2D p2, Location2D p3, boolean isTop) {
+	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Location2D p1, Location2D p2, Location2D p3, Material material) {
 		int[] x = new int[3];
 		int[] y = new int[3];
 		int n;
@@ -125,79 +115,60 @@ public class Draw {
 
 		Polygon p = new Polygon(x, y, n);  // This polygon represents a triangle with the above
 		//   vertices.
-		g.fillPolygon(p);
+		//g.fillPolygon(p);
 		//graphics2D.drawPolygon(p);
-/*
-		int p1index = 0;
-		int p2index = 1;
-		int p3index = 2;
-		if (!isTop) {
-		} else {
-			p1index = 0;
-			p2index = 2;
-			p3index = 1;
-		}
 
-		double slope = 0;
-		if (isTop) {
-			slope = ((double) y[p2index] - y[p1index]) / (x[p2index] - x[p1index]);
-		} else {
-			slope = ((double) y[p2index] - y[p1index]) / (x[p2index] - x[p1index]);
-		}
+		//g2.fillPolygon(p);
 
-		double slope2 = 0;
-		if (isTop) {
-			slope2 = ((double) y[p3index] - y[p1index]) / (x[p3index] - x[p1index]);
-		} else {
-			slope2 = ((double) y[p3index] - y[p1index]) / (x[p3index] - x[p1index]);
-		}
+		if (material != null) {
 
-		try {
-			BufferedImage resized = resize(testTexture, bix - bixmin, biy - biymin);
+			TextureStitchingAlgo tse = TextureStitchingAlgo.DEFAULT_BOTTOM;
+			int p1index = tse.getIndex1();
+			int p2index = tse.getIndex2();
+			int p3index = tse.getIndex3();
+			double slope = (((double) (y[p2index] - y[p1index]) / (x[p2index] - x[p1index])));
+			double slope2 = 0;//(((double) (y[p2index] - y[p3index]) / (x[p2index] - x[p3index])));
+			double slope3 = (((double) (y[p3index] - y[p1index]) / (x[p3index] - x[p1index])));
+			if (Double.isInfinite(slope)) {
+				tse = TextureStitchingAlgo.DEFAULT;
+				p1index = tse.getIndex1();
+				p2index = tse.getIndex2();
+				p3index = tse.getIndex3();
+				slope = (((double) (y[p2index] - y[p1index]) / (x[p2index] - x[p1index])));
+				slope2 = 0;///(((double) (y[p2index] - y[p3index]) / (x[p2index] - x[p3index])));
+				slope3 = (((double) (y[p3index] - y[p1index]) / (x[p3index] - x[p1index])));
+			}
+			BufferedImage resize = null;
+			try {
+				resize = resize(material.getMaterial(), bix - bixmin, biy - biymin, slope, slope2, slope3);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			g.drawImage(resize, 0, 0, null);
 			for (int x1 = bixmin; x1 < bix; x1++) {
-				//for (int y1 = biymin; y1 < biy; y1++) {
-					//if (p.contains(x1, y1)) {
-						//g.drawImage(resized.getSubimage((x1-bixmin)%resized.getWidth(), (int) (((y1-biymin) + (bottomslope*(x1-bixmin))))%resized.getHeight(),1,1),x1,y1,null);
-
-						int x3 = x1 - bixmin;
-						if (resized.getWidth() > x3)
-							if (0 <= x3) {
-								if(slope > 0)
-								for (double y1 =  (biymin+(slope * (x1 - bixmin))); y1 < biy-(slope * (x1 - bixmin)); y1+=1) {
-									int y3 = (int) (((y1 - biymin)));
-									if (bi.getWidth() > x1 && bi.getHeight() > y1 && resized.getHeight() > y3)
-										if (x1 >= 0 && y1 >= 0 && y3 >= 0) {
-											int rgb = resized.getRGB(x3, y3);
-											bi.setRGB(x1, (int) y1, rgb);
-										}
-								}
-						//	}
-					//}
+				for (int y1 = biymin; y1 < biy; y1++) {
+					if (p.contains(x1, y1)) {
+						int y2 = (int) ((y1 - biymin));//* (slope <= 0 ? slope*(bixmin-x1) : slope*(x1-bixmin)));
+						if (x1 >= 0 && y2 >= 0 && x1 - bixmin < resize.getWidth() && y2 < resize.getHeight()) {
+							int rgb = resize.getRGB(x1 - bixmin, y2);
+							if (x1 >= 0 && y1 >= 0 && x1 < bi.getWidth() && y1 < bi.getHeight()) {
+								bi.setRGB(x1, y1, rgb);
+							}
+						}
+					}
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
+		} else {
+			g.fillPolygon(p);
+		}
+
 
 	}
 
 
 	public static BufferedImage resize(BufferedImage img,
-									   int maxWidth, int maxHeight) throws IOException {
-		int scaledWidth = maxWidth, scaledHeight = maxHeight;
-
-		/*scaledWidth = maxWidth;
-		scaledHeight = (int) (img.getHeight() * ( (double) scaledWidth / img.getWidth() ));
-
-		if (scaledHeight> maxHeight) {
-			scaledHeight = maxHeight;
-			scaledWidth= (int) (img.getWidth() * ( (double) scaledHeight/ img.getHeight() ));
-
-			if (scaledWidth > maxWidth) {
-				scaledWidth = maxWidth;
-				scaledHeight = maxHeight;
-			}
-		}*/
+									   int width, int height, double slope, double slope2, double slope3) throws IOException {
+		int scaledWidth = width, scaledHeight = height;
 
 		Image resized = img.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_FAST);
 
@@ -205,71 +176,106 @@ public class Draw {
 
 		buffered.getGraphics().drawImage(resized, 0, 0, null);
 
-		return buffered;
+		BufferedImage interoperated = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+		if (Double.isFinite(slope))
+			for (double x = 0; x < buffered.getWidth(); x++) {
+
+				for (double y = 0; y < buffered.getHeight(); y += 1) {
+
+					int y1 = (int) (y + (slope3 * x));
+					int y2 = (int) (y + (slope3 * x));
+					int y12 = (int) (y*(((double)buffered.getHeight()-(x*slope3))/buffered.getHeight()));
+					int y22 = (int) (y*(((double)buffered.getHeight()-(x*slope3))/buffered.getHeight()));
+
+
+					if (y1 >= 0 && y1 < buffered.getHeight())
+						if (y2 >= 0 && y2 < buffered.getHeight())
+							if (y12 >= 0 && y12 < buffered.getHeight())
+								if (y22 >= 0 && y22 < buffered.getHeight())
+									if (slope > 0) {
+										interoperated.setRGB((int) x, y2, buffered.getRGB((int) x, y12));
+									} else {
+										interoperated.setRGB((int) x, y1, buffered.getRGB((int) x, y22));
+									}
+				}
+			}
+		return interoperated;
 	}
 
 
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, Color color, boolean istop) {
+	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop) {
 
-		if (color != null)
-			g.setColor(color);
+		if (triangle.getColor() != null)
+			g.setColor(triangle.getColor());
 		double cos = Math.cos(Math.toRadians(world.camera.getYaw()));
 		double sin = Math.sin(Math.toRadians(world.camera.getYaw()));
 
-		/*Location2D point = triangle.getPoints()[0];
-		Location2D otherPoint = triangle.getPoints()[1];
-		Location2D otherPoint3 = triangle.getPoints()[2];*/
-
-		double zdif = cos * (triangle.getPoints()[0].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[0].getX() - world.camera.getPersonLocation().getX()));
-		double ydif = triangle.getPoints()[0].getY() - world.camera.getPersonLocation().getY();
-		double xdif = cos * (triangle.getPoints()[0].getX() - world.camera.getPersonLocation().getX()) + (sin * (triangle.getPoints()[0].getZ() - world.camera.getPersonLocation().getZ()));
-
-		double zdif1 = cos * (triangle.getPoints()[1].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[1].getX() - world.camera.getPersonLocation().getX()));
-		double ydif1 = triangle.getPoints()[1].getY() - world.camera.getPersonLocation().getY();
-		double xdif1 = cos * (triangle.getPoints()[1].getX() - world.camera.getPersonLocation().getX()) + (sin * (triangle.getPoints()[1].getZ() - world.camera.getPersonLocation().getZ()));
-
-		double zdif2 = cos * (triangle.getPoints()[2].getZ() - world.camera.getPersonLocation().getZ()) - (sin * (triangle.getPoints()[2].getX() - world.camera.getPersonLocation().getX()));
-		double ydif2 = triangle.getPoints()[2].getY() - world.camera.getPersonLocation().getY();
-		double xdif2 = cos * (triangle.getPoints()[2].getX() - world.camera.getPersonLocation().getX())+ (sin * (triangle.getPoints()[2].getZ() - world.camera.getPersonLocation().getZ()));
+		/*double cosPitch = Math.cos(world.camera.getPitchRadians());
+		double sinPitch = Math.sin(world.camera.getPitchRadians()); // Pitch is the altitude of the forward vector off the xy plane, toward the down direction.
+		double pitch = -Math.asin(world.camera.getPitchRadians() - (Math.PI/2));*/
 
 
-		Location2D point = new Location2D((int) ((xdif * bi.getHeight() / zdif)), (int) -(ydif * bi.getHeight() / zdif));
-		Location2D otherPoint = new Location2D((int) ((xdif1 * bi.getHeight() / zdif1)), (int) -(ydif1 * bi.getHeight() / zdif1));
-		Location2D otherPoint3 = new Location2D((int) ((xdif2 * bi.getHeight() / zdif2)), (int) -(ydif2 * bi.getHeight() / zdif2));
+		//System.out.println(cosPitch);
+		//System.out.println(pitch);
 
-			/*System.out.println("P1 X is "+point.getX());
-		System.out.println("P1 Y is "+point.getY());
-		System.out.println("P2 X is "+otherPoint.getX());
-		System.out.println("P2 Y is "+otherPoint.getY());
-		System.out.println("P3 X is "+otherPoint3.getX());
-		System.out.println("P3 Y is "+otherPoint3.getY());*/
+		double zdif = cos * (triangle.getPoints()[0].getZ() - world.camera.getLocation().getZ()) - (sin * (triangle.getPoints()[0].getX() - world.camera.getLocation().getX()));
+		double ydif = (triangle.getPoints()[0].getY() - world.camera.getLocation().getY());
+		double xdif = cos * (triangle.getPoints()[0].getX() - world.camera.getLocation().getX()) + (sin * (triangle.getPoints()[0].getZ() - world.camera.getLocation().getZ()));
+
+		double zdif1 = cos * (triangle.getPoints()[1].getZ() - world.camera.getLocation().getZ()) - (sin * (triangle.getPoints()[1].getX() - world.camera.getLocation().getX()));
+		double ydif1 = (triangle.getPoints()[1].getY() - world.camera.getLocation().getY());
+		double xdif1 = cos * (triangle.getPoints()[1].getX() - world.camera.getLocation().getX()) + (sin * (triangle.getPoints()[1].getZ() - world.camera.getLocation().getZ()));
+
+		double zdif2 = cos * (triangle.getPoints()[2].getZ() - world.camera.getLocation().getZ()) - (sin * (triangle.getPoints()[2].getX() - world.camera.getLocation().getX()));
+		double ydif2 = (triangle.getPoints()[2].getY() - world.camera.getLocation().getY());
+		double xdif2 = cos * (triangle.getPoints()[2].getX() - world.camera.getLocation().getX()) + (sin * (triangle.getPoints()[2].getZ() - world.camera.getLocation().getZ()));
+
+		//TODO: Look at this for heights
+		/*double ydifAngle = Math.sin(world.camera.getPitchRadians());
+		double ydifpitchX = ydifAngle/zdif*2;
+		double ydifX = ydifpitchX*bi.getHeight()/2;
+
+		double ydifAngle1 = Math.sin(world.camera.getPitchRadians());
+		double ydifpitchX1 = ydifAngle1/zdif1*2;
+		double ydifX1 = ydifpitchX1*bi.getHeight()/2;
+
+		double ydifAngle2 = Math.sin(world.camera.getPitchRadians());
+		double ydifpitchX2 = ydifAngle2/zdif2*2;
+		double ydifX2 = ydifpitchX2*bi.getHeight()/2;*/
+
+
+
+
+		Location2D point = new Location2D((int) ((xdif * bi.getHeight() / zdif)), (int) ( ( -(ydif * bi.getHeight() / zdif))));
+		Location2D point2 = new Location2D((int) ((xdif1 * bi.getHeight() / zdif1)), (int) (-(ydif1 * bi.getHeight() / zdif1)));
+		Location2D point3 = new Location2D((int) ((xdif2 * bi.getHeight() / zdif2)), (int) (-(ydif2 * bi.getHeight() / zdif2)));
 
 		if (point.getX() > bi.getWidth())
 			return;
 		if (point.getX() < -bi.getWidth())
 			return;
 
-		if (otherPoint.getX() > bi.getWidth())
+		if (point2.getX() > bi.getWidth())
 			return;
-		if (otherPoint.getX() < -bi.getWidth())
-			return;
-
-		if (otherPoint3.getX() > bi.getWidth())
-			return;
-		if (otherPoint3.getX() < -bi.getWidth())
+		if (point2.getX() < -bi.getWidth())
 			return;
 
-		fillTriangle(bi, g, x, y, point, otherPoint, otherPoint3, istop);
+		if (point3.getX() > bi.getWidth())
+			return;
+		if (point3.getX() < -bi.getWidth())
+			return;
+
+		fillTriangle(bi, g, x, y, point, point2, point3, triangle.getMaterial());
 
 		//if (color == null)
 		g.setColor(new Color(255, 0, 0));
-		drawLine(g, point.getX() + x, point.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
+		drawLine(g, point.getX() + x, point.getY() + y, point2.getX() + x, point2.getY() + y);
 		//if (color == null)
 		g.setColor(new Color(0, 255, 0));
-		drawLine(g, point.getX() + x, point.getY() + y, otherPoint3.getX() + x, otherPoint3.getY() + y);
+		drawLine(g, point.getX() + x, point.getY() + y, point3.getX() + x, point3.getY() + y);
 		//if (color == null)
 		g.setColor(new Color(0, 0, 255));
-		drawLine(g, otherPoint3.getX() + x, otherPoint3.getY() + y, otherPoint.getX() + x, otherPoint.getY() + y);
+		drawLine(g, point3.getX() + x, point3.getY() + y, point2.getX() + x, point2.getY() + y);
 	}
 
 }

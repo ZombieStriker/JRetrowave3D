@@ -7,14 +7,30 @@ import me.zombie_striker.game.engine.utils.Draw;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class World {
 
 	public List<RenderableObject> toRender = new ArrayList<>();
 
-	public Camera camera = new Camera(new Location(0, 1, 0), new Location(-1, 1, 0));
+	public Camera camera;
+
+	public World(int x, int y) {
+		camera = new Camera(new Location(x, 1, y));
+	}
+
+	public RenderableObject collidesWith(Location location) {
+		return collidesWith(location, 0);
+	}
+
+	public RenderableObject collidesWith(Location location, double size) {
+		for (RenderableObject r : toRender) {
+			if (r.isInside(location, size))
+				return r;
+		}
+		return null;
+	}
 
 	public void render(BufferedImage renderto) {
 		BufferedImage bi = renderto;
@@ -25,68 +41,65 @@ public class World {
 		screen.setColor(new Color(45, 45, 45));
 		screen.fillRect(0, bi.getHeight() / 2 + (bi.getHeight() / 80), bi.getWidth(), bi.getHeight());
 
-		screen.setColor(new Color(183, 10, 238));
+		/*screen.setColor(new Color(183, 10, 238));
 		for (int line = 1; line < 80; line++) {
 			screen.fillRect(0, bi.getHeight() / 2 + bi.getHeight() / line, bi.getWidth(), 2);
+		}*/
+
+		HashMap<Triangle, Double> treeMap = new HashMap<>();
+		for (RenderableObject renderableObject : toRender) {
+			for (Triangle t : renderableObject.getObjectsToRender(this)) {
+				if (t != null) {
+					boolean pointInFieldOfView = false;
+					for (Location loc : t.getPoints()) {
+						if (camera.getYaw() > 45 && camera.getYaw() <= 135) {
+							if (loc.getX() <= camera.getLocation().getX()) {
+								pointInFieldOfView = true;
+								break;
+							}
+						} else if (camera.getYaw() > 135 && camera.getYaw() <= 225) {
+							if (loc.getZ() <= camera.getLocation().getZ()) {
+								pointInFieldOfView = true;
+								break;
+							}
+						} else if (camera.getYaw() > 225 && camera.getYaw() <= 315) {
+							if (loc.getX() >= camera.getLocation().getX()) {
+								pointInFieldOfView = true;
+								break;
+							}
+						} else {
+							if (loc.getZ() >= camera.getLocation().getZ()) {
+								pointInFieldOfView = true;
+								break;
+							}
+						}
+					}
+					if (pointInFieldOfView)
+						treeMap.put(t, t.getAverageDistanceSquared(this));
+				}
+			}
+		}
+		List<Map.Entry<Triangle, Double>> list = new LinkedList<Map.Entry<Triangle, Double>>(treeMap.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<Triangle, Double>>() {
+			@Override
+			public int compare(Map.Entry<Triangle, Double> o1, Map.Entry<Triangle, Double> o2) {
+				if (false) {
+					return o1.getValue().compareTo(o2.getValue());
+				} else {
+					return o2.getValue().compareTo(o1.getValue());
+				}
+			}
+		});
+		Map<Triangle, Double> sortedMap = new LinkedHashMap<>();
+		for (Map.Entry<Triangle, Double> entry : list) {
+			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 
+//renderableObject.getObjectsToRender(this)
 
-		for (RenderableObject renderableObject : toRender) {
-			for (Triangle plane : renderableObject.getObjectsToRender(this)) {
-				if (plane != null) {
-
-					double cos = Math.cos(Math.toRadians(camera.getYaw()));
-					double sin = Math.sin(Math.toRadians(camera.getYaw()));
-
-
-					double personToCameraOffsetX = camera.getApertureLocation().getX() - camera.getPersonLocation().getX();// testing should be 1
-					double personToCameraOffsetZ = camera.getApertureLocation().getZ() - camera.getPersonLocation().getZ(); //testing should be 0
-
-
-					double fovcos = Math.cos(Math.toRadians(camera.getFOV()));
-					double fovsin = Math.sin(Math.toRadians(camera.getFOV()));
-
-
-					double halfheight = bi.getHeight() / 2;
-
-						/*Triangle triangle3 = new Triangle(plane.getLocation(),
-								new Location2D((int) (x2offz2), (int) (bi.getHeight() / zdif2)),
-								new Location2D((int) (xoffz), (int) (bi.getHeight() / zdif)),
-								new Location2D((int) (x2offz2 ), (int) ((-(ydif2 * halfheight) / zdif2) - (bi.getHeight() / zdif2)))
-						);*/
-					Draw.drawTriangle(bi, screen, this, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), plane, new Color(255, 255, 0), false);
-
-
-						/*Triangle triangle2 = new Triangle(plane.getLocation(),
-								new Location2D((int) (xoffz), (int) ((-(ydif2 * halfheight) / zdif) - (bi.getHeight() / zdif))),
-								new Location2D((int) (xoffz), (int) (bi.getHeight() / zdif)),
-								new Location2D((int) (x2offz2), (int) ((-(ydif2 * halfheight) / zdif2) - (bi.getHeight() / zdif2)))
-						);
-						Draw.drawTriangle(bi,screen, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), triangle2, new Color(236, 81, 10),true);
-						*/
-					/*	if (xdif != xdif2 && zdif != zdif2) {
-							Triangle triangle = new Triangle(plane.getLocation(),
-									new Location2D((int) (cos * x2offz2 + (sin * x2off)), (int) (cos * bi.getHeight() / zdif2)),
-									new Location2D((int) (cos * xoffz + (sin * xoffz2)), (int) (cos * bi.getHeight() / zdif)),
-									new Location2D((int) (cos * x2offz2 + (sin * x2offz2)), (int) (cos * (-(ydif2 * halfheight) / zdif2) + (bi.getHeight() / zdif2)))
-							);
-							Draw.drawTriangle(screen, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), triangle, null);
-						} else if (xdif == xdif2) {
-							Triangle triangle = new Triangle(plane.getLocation(),
-									new Location2D((int) x2off, (int) (bi.getHeight() / zdif)),
-									new Location2D((int) xoffz2, (int) (-ydif2 * (((halfheight) / zdif2)) + ((bi.getHeight() / zdif2)))),
-									new Location2D((int) x2offz2, (int) (bi.getHeight() / zdif2))
-							);
-							Draw.drawTriangle(screen, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), triangle, null);
-						} else {
-							Triangle triangle = new Triangle(plane.getLocation(),
-									new Location2D((int) (x2offz2), (int) (bi.getHeight() / zdif)),
-									new Location2D((int) (xoffz), (int) (bi.getHeight() / zdif)),
-									new Location2D((int) (x2offz2), (int) ((-(ydif2 * halfheight) / zdif) + (bi.getHeight() / zdif)))
-							);
-							Draw.drawTriangle(screen, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), triangle, null);
-						}*/
-				}
+		for (Triangle plane : sortedMap.keySet()) {
+			if (plane != null) {
+				Draw.drawTriangle(bi, screen, this, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), plane, false);
 			}
 		}
 		//Triangle triangle = new Triangle(new Location(1,1,0),new Location2D(0,0),new Location2D(0,50), new Location2D(25,0));

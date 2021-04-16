@@ -4,25 +4,44 @@ import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.Location;
 import me.zombie_striker.game.engine.data.Plane;
 import me.zombie_striker.game.engine.data.Triangle;
+import me.zombie_striker.game.engine.utils.MathUtil;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Sprite implements RenderableObject {
 
 	public static final int SCALAR = 100;
 
-	private Triangle[] plane = new Triangle[2];
+	private Location center;
+	private int size;
 
 	private BufferedImage bi ;
 
-	public Sprite(Location center, BufferedImage bi) {
+	public Sprite(Location center, BufferedImage bi, int size) {
 		this.bi = bi;
-		//plane[0] = new Plane(new Location(center.getX(), center.getY(), center.getZ()), new Location(center.getX()+bi.getWidth(), center.getY()+(bi.getHeight()*SCALAR), center.getZ()));
-		//plane[0].setTexture(bi);
+		this.center = center;
+		this.size = size;
 	}
 
 	@Override
 	public Triangle[] getObjectsToRender(World world) {
-		return plane;
+		Triangle[] ts = new Triangle[2];
+		double dx = Math.cos(Math.toRadians(world.camera.getYaw()));
+		double dz = Math.sin(Math.toRadians(world.camera.getYaw()));
+		ts[0] = new Triangle(new Location(center.getX()+dx,center.getY(),center.getZ()+dz),
+				new Location(center.getX()-dx,center.getY(),center.getZ()-dz),
+				new Location(center.getX()+dx,center.getY()+size,center.getZ()+dz)
+		,new Color(0,0,0));
+		ts[1] = new Triangle(new Location(center.getX()+dx,center.getY()+size,center.getZ()+dz),
+				new Location(center.getX()-dx,center.getY(),center.getZ()-dz),
+				new Location(center.getX()-dx,center.getY()+size,center.getZ()-dz)
+				,new Color(11, 14, 78));
+		return ts;
+	}
+
+	@Override
+	public boolean isInside(Location location,double size) {
+		return MathUtil.distanceSquared(location,center) <= (2*size)*(2*size);
 	}
 }
