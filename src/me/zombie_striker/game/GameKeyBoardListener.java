@@ -1,7 +1,10 @@
 package me.zombie_striker.game;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import static me.zombie_striker.game.Main.setMouse;
 
 public class GameKeyBoardListener implements KeyListener {
 	@Override
@@ -28,6 +31,10 @@ public class GameKeyBoardListener implements KeyListener {
 			Main.game.i = active;
 		if(e.getKeyCode()==KeyEvent.VK_K)
 			Main.game.k = active;
+		if(e.getKeyCode()==KeyEvent.VK_SPACE)
+			Main.game.jump = active;
+		if(e.getKeyCode()==KeyEvent.VK_SHIFT)
+			Main.game.crouch = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
 			Main.game.turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)
@@ -36,6 +43,11 @@ public class GameKeyBoardListener implements KeyListener {
 			Main.game.turn_up = active;
 		if(e.getKeyCode()==KeyEvent.VK_DOWN)
 			Main.game.turn_down = active;
+		if(e.getKeyCode()==KeyEvent.VK_ESCAPE) {
+			Main.game.escaped = !Main.game.escaped;
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			setMouse(Main.game.isEscaped()?null:toolkit.getImage("textures/transparent.png"),0,0);
+		}
 
 	}
 
@@ -58,6 +70,10 @@ public class GameKeyBoardListener implements KeyListener {
 			Main.game.i = active;
 		if(e.getKeyCode()==KeyEvent.VK_K)
 			Main.game.k = active;
+		if(e.getKeyCode()==KeyEvent.VK_SPACE)
+			Main.game.jump = active;
+		if(e.getKeyCode()==KeyEvent.VK_SHIFT)
+			Main.game.crouch = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
 			Main.game.turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)

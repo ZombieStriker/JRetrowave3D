@@ -2,6 +2,7 @@ package me.zombie_striker.game;
 
 import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.BlockFace;
+import me.zombie_striker.game.engine.data.Light;
 import me.zombie_striker.game.engine.data.Vector3D;
 import me.zombie_striker.game.engine.geometry.*;
 
@@ -36,36 +37,28 @@ public class Game {
 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 			{}
 	};
-	private final int spawnX = 0;//map.length/2;
-	private final int spawnY = 0;//map.length/2;
+	private final int spawnX = 500;//map.length/2;
+	private final int spawnY = 500;//map.length/2;
 	private final World world = new World(spawnX, spawnY);
+	public boolean crouch = false;
+	public boolean jump = false;
+	public boolean escaped= false;
 
 	public void init() {
 		try {
-			/*Sprite triangle  = new Sprite(new Location(0,1,10), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 7);
-			world.toRender.add(triangle);
-			Sprite triangle2  = new Sprite(new Location(0,1,-10), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 7);
-			world.toRender.add(triangle2);
-			Sprite triangle3  = new Sprite(new Location(10,1,0), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 7);
-			world.toRender.add(triangle3);
-			Sprite triangle4  = new Sprite(new Location(-10,1,0), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 7);
-			world.toRender.add(triangle4);*/
-			FlatPlane plane = new FlatPlane(new Vector3D(0, 2, 10), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 1,1);
+			Light light = new Light(new Vector3D(500.5,5,500.5),10);
+			world.registerLight(light);
+			FlatPlane plane = new FlatPlane(new Vector3D(500, 2, 5010), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 1,1);
 			world.toRender.add(plane);
-			FlatPlane floor = new FlatPlane(new Vector3D(0, 0, 0), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 10,10);
-			floor.setPitch(Math.toRadians(90));
+			Floor floor = new Floor(new Vector3D(500, 0, 500), 10,10);
 			world.toRender.add(floor);
-			//SquareFlat floor = new SquareFlat(new Vector3D(0, 0, 0), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 10);
-			//world.toRender.add(floor);
-			//Sprite sprite = new Sprite(new Vector3D(4, 0, 0), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 1);
-			//world.toRender.add(sprite);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		Cube cube2 = new Cube(new Vector3D(0, 0, 20), 2, 2, 2);
+		Cube cube2 = new Cube(new Vector3D(500, 0, 520), 2, 2, 2);
 		world.toRender.add(cube2);
-		Prisim prism2 = new Prisim(new Vector3D(10, 0, 20), 2, 2, 2);
+		Prisim prism2 = new Prisim(new Vector3D(510, 0, 520), 2, 2, 2);
 		world.toRender.add(prism2);
 		if (true)
 			return;
@@ -168,6 +161,24 @@ public class Game {
 			}
 		}
 
+		if (jump) {
+			Main.game.getWorld().camera.getLocation().setY(Main.game.getWorld().camera.getLocation().getY() +k);
+			if (Main.game.world.collidesWith(Main.game.getWorld().camera.getLocation(), 0.25) != null) {
+				Main.game.getWorld().camera.getLocation().setY(Main.game.getWorld().camera.getLocation().getY() - k);
+			}
+			for (RenderableObject renderableObject : world.toRender) {
+				renderableObject.updateTriangles();
+			}
+		}
+		if (crouch) {
+			Main.game.getWorld().camera.getLocation().setY(Main.game.getWorld().camera.getLocation().getY() -k);
+			if (Main.game.world.collidesWith(Main.game.getWorld().camera.getLocation(), 0.25) != null) {
+				Main.game.getWorld().camera.getLocation().setY(Main.game.getWorld().camera.getLocation().getY() + k);
+			}
+			for (RenderableObject renderableObject : world.toRender) {
+				renderableObject.updateTriangles();
+			}
+		}
 		if (turn_left) {
 			Main.game.getWorld().camera.setYaw((int) Main.game.getWorld().camera.getYaw() + rotation);
 			for (RenderableObject renderableObject : world.toRender) {
@@ -227,5 +238,9 @@ public class Game {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public boolean isEscaped() {
+		return escaped;
 	}
 }

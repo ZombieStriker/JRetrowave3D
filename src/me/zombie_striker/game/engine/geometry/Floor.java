@@ -1,6 +1,5 @@
 package me.zombie_striker.game.engine.geometry;
 
-import me.zombie_striker.game.Main;
 import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.BlockFace;
 import me.zombie_striker.game.engine.data.Material;
@@ -10,7 +9,7 @@ import me.zombie_striker.game.engine.data.Vector3D;
 import java.awt.*;
 import java.util.Arrays;
 
-public class Cube extends RenderableObject {
+public class Floor extends RenderableObject {
 
 	private boolean[] hiddenFaces = new boolean[6];
 
@@ -20,12 +19,8 @@ public class Cube extends RenderableObject {
 	private Vector3D bottomCorner;
 	private Vector3D topCorner;
 
-	public Cube(Vector3D center, double width, double height, double length) {
-		super(12);
-		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
-		Vector3D toprightback = new Vector3D(center.getX() + width, center.getY() + height, center.getZ());
-		Vector3D topleftfront = new Vector3D(center.getX(), center.getY() + height, center.getZ() + length);
-		Vector3D topleftback = new Vector3D(center.getX(), center.getY() + height, center.getZ());
+	public Floor(Vector3D center, double width, double length) {
+		super(2);
 
 		Vector3D bottomrightfront = new Vector3D(center.getX() + width, center.getY(), center.getZ() + length);
 		Vector3D bottomrightback = new Vector3D(center.getX() + width, center.getY(), center.getZ());
@@ -33,42 +28,30 @@ public class Cube extends RenderableObject {
 		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
 
 		bottomCorner = bottomleftback;
-		topCorner = toprightfront;
+		topCorner = bottomrightfront;
 
 
 		/*sides[0]= new Plane(bottomleftfront,toprightfront);//front
 		sides[1]= new Plane(bottomleftback,toprightback);//back
 		sides[2]= new Plane(bottomleftback,topleftfront);//left
 		sides[3]= new Plane(bottomrightback,toprightfront);//right*/
-		getTriangles()[0] = new Triangle(topleftfront, bottomrightfront, bottomleftfront, new Color(255, 0, 0)); //front bottom
-		getTriangles()[1] = new Triangle(toprightback, bottomleftback, bottomrightback, new Color(11, 255, 0)); //back bottom
-		getTriangles()[2] = new Triangle(topleftback,  bottomleftfront,bottomleftback, new Color(0, 70, 255)); //left bottom
-		getTriangles()[3] = new Triangle( bottomrightfront, toprightfront, bottomrightback, new Color(255, 180, 0)); //right bottom
 
-		getTriangles()[4] = new Triangle(topleftfront, toprightfront, bottomrightfront, new Color(255, 0, 0)); //front top
-		getTriangles()[5] = new Triangle( bottomleftback, toprightback,topleftback, new Color(11, 255, 0)); //back top
-		getTriangles()[6] = new Triangle(topleftback,  bottomleftfront,topleftfront, new Color(0, 70, 255)); // left top
-		getTriangles()[7] = new Triangle(toprightback,  bottomrightback, toprightfront,new Color(255, 180, 0)); // right top
-
-		getTriangles()[8] = new Triangle(topleftback,toprightback, toprightfront,  new Color(152, 5, 245)); // left top
-		getTriangles()[9] = new Triangle(toprightfront, topleftfront, topleftback, new Color(152, 5, 245)); // right top
-
-		getTriangles()[10] = new Triangle(bottomleftback, bottomrightfront,bottomrightback,  new Color(245, 5, 165)); // left top
-		getTriangles()[11] = new Triangle(bottomrightfront,  bottomleftback,bottomleftfront, new Color(245, 5, 165)); // right top
+		getTriangles()[0] = new Triangle(bottomleftback,bottomrightback, bottomrightfront,  new Color(245, 5, 165)); // left top
+		getTriangles()[1] = new Triangle(bottomrightfront, bottomleftfront, bottomleftback, new Color(245, 5, 165)); // right top
 		//sides[4]= new Plane(topleftback,toprightfront);//top
 		//sides[5]= new Plane(bottomleftfront,bottomrightfront);//bottom
 	}
 
-	public Cube(Vector3D center, double width, double height, double length, Material textures) {
-		super(12);
+	public Floor(Vector3D center, double width, double length, Material textures) {
+		super(2);
 		Material[] array = new Material[4];
 		Arrays.fill(array, textures);
-		init(center, width, height, length, array);
+		init(center, width,  length, array);
 	}
 
-	public Cube(Vector3D center, double width, double height, double length, Material[] textures) {
-		super(12);
-		init(center, width, height, length, textures);
+	public Floor(Vector3D center, double width, double length, Material[] textures) {
+		super(2);
+		init(center, width, length, textures);
 	}
 
 	public double getYaw() {
@@ -90,12 +73,7 @@ public class Cube extends RenderableObject {
 	}
 
 
-	public void init(Vector3D center, double width, double height, double length, Material[] textures) {
-
-		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
-		Vector3D toprightback = new Vector3D(center.getX() + width, center.getY() + height, center.getZ());
-		Vector3D topleftfront = new Vector3D(center.getX(), center.getY() + height, center.getZ() + length);
-		Vector3D topleftback = new Vector3D(center.getX(), center.getY() + height, center.getZ());
+	public void init(Vector3D center, double width, double length, Material[] textures) {
 
 		Vector3D bottomrightfront = new Vector3D(center.getX() + width, center.getY(), center.getZ() + length);
 		Vector3D bottomrightback = new Vector3D(center.getX() + width, center.getY(), center.getZ());
@@ -103,22 +81,10 @@ public class Cube extends RenderableObject {
 		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
 
 		bottomCorner = bottomleftback;
-		topCorner = toprightfront;
-		/*sides[0]= new Plane(bottomleftfront,toprightfront);//front
-		sides[1]= new Plane(bottomleftback,toprightback);//back
-		sides[2]= new Plane(bottomleftback,topleftfront);//left
-		sides[3]= new Plane(bottomrightback,toprightfront);//right*/
-		getTriangles()[0] = new Triangle(toprightfront, bottomrightfront, bottomleftfront, textures[0]); //front bottom
-		getTriangles()[1] = new Triangle(topleftback, bottomleftback, bottomrightback, textures[2]); //back bottom
-		getTriangles()[2] = new Triangle(topleftfront, bottomleftfront, bottomleftback, textures[1]); //left bottom
-		getTriangles()[3] = new Triangle(toprightback, bottomrightback, bottomrightfront, textures[3]); //right bottom
+		topCorner = bottomrightfront;
 
-		getTriangles()[4] = new Triangle(topleftfront, toprightfront, bottomleftfront, textures[0]); //front top
-		getTriangles()[5] = new Triangle(toprightback, topleftback, bottomrightback, textures[2]); //back top
-		getTriangles()[6] = new Triangle(topleftfront, topleftback, bottomleftback, textures[1]); // left top
-		getTriangles()[7] = new Triangle(toprightback, toprightfront, bottomrightfront, textures[3]); // right top
-
-
+		getTriangles()[0] = new Triangle(bottomleftback,bottomrightback, bottomrightfront,  new Color(245, 5, 165)); // left top
+		getTriangles()[1] = new Triangle(bottomrightfront, bottomleftfront, bottomleftback, new Color(245, 5, 165)); // right top
 		//sides[4]= new Plane(topleftback,toprightfront);//top
 		//sides[5]= new Plane(bottomleftfront,bottomrightfront);//bottom
 	}

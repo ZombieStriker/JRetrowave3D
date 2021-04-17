@@ -43,11 +43,11 @@ public class Camera {
 	}
 
 	public void setPitch(float pitch) {
-		if (pitch > 90) {
-			pitch = 90;
+		if (pitch >= 90) {
+			pitch = 90-1;
 		}
-		if (pitch < -90) {
-			pitch = -90;
+		if (pitch <= -90) {
+			pitch = -90+1;
 		}
 		this.pitch = pitch;
 		//apatureLocation = new Location((int)(personLocation.getX()+ Math.cos(Math.toRadians(yaw))), personLocation.getY(), (int)(personLocation.getZ()+ Math.sin(Math.toRadians(yaw))));

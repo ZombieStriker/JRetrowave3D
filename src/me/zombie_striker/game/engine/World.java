@@ -1,5 +1,6 @@
 package me.zombie_striker.game.engine;
 
+import me.zombie_striker.game.engine.data.Light;
 import me.zombie_striker.game.engine.data.Vector3D;
 import me.zombie_striker.game.engine.data.Triangle;
 import me.zombie_striker.game.engine.geometry.RenderableObject;
@@ -13,6 +14,7 @@ import java.util.*;
 public class World {
 
 	public List<RenderableObject> toRender = new ArrayList<>();
+	private List<Light> lights = new ArrayList<>();
 
 	public Camera camera;
 
@@ -46,7 +48,8 @@ public class World {
 			screen.fillRect(0, bi.getHeight() / 2 + bi.getHeight() / line, bi.getWidth(), 2);
 		}*/
 
-		HashMap<Triangle, Double> treeMap = new HashMap<>();
+		HashMap<Triangle, Double> triangleMap = new HashMap<>();
+		HashMap<Triangle, Double> triangleHeightDifMap = new HashMap<>();
 		for (RenderableObject renderableObject : toRender) {
 			for (Triangle t : renderableObject.getTrianglesForRendering(this)) {
 				if (t != null) {
@@ -75,12 +78,13 @@ public class World {
 							}
 						//}
 					}
-					if (pointInFieldOfView)
-						treeMap.put(t, t.getAverageDistanceSquared(this));
+					if (pointInFieldOfView) {
+						triangleMap.put(t, t.getFurthestDistance(this));
+					}
 				}
 			}
 		}
-		List<Map.Entry<Triangle, Double>> list = new LinkedList<Map.Entry<Triangle, Double>>(treeMap.entrySet());
+		List<Map.Entry<Triangle, Double>> list = new LinkedList<Map.Entry<Triangle, Double>>(triangleMap.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<Triangle, Double>>() {
 			@Override
 			public int compare(Map.Entry<Triangle, Double> o1, Map.Entry<Triangle, Double> o2) {
@@ -109,5 +113,16 @@ public class World {
 
 
 		screen.dispose();
+	}
+
+	public List<Light> getLights() {
+		return lights;
+	}
+	public List<RenderableObject> getRenderableObjects(){
+		return toRender;
+	}
+
+	public void registerLight(Light light) {
+		this.lights.add(light);
 	}
 }

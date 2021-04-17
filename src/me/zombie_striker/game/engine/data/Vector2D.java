@@ -27,8 +27,21 @@ public class Vector2D {
 	}
 
 	public Vector2D multiply(double d){
-		x*=d;
-		y*=d;
+		return multiply(d,d);
+	}
+
+	public void add(double x, double y){
+		this.x +=x;
+		this.y+=y;
+	}
+
+	public Vector2D multiply(double xd,double yd){
+		x*=xd;
+		y*=yd;
 		return this;
+	}
+
+	public boolean isInfinite() {
+		return Double.isInfinite(x) || Double.isInfinite(y);
 	}
 }

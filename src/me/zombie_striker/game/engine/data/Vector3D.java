@@ -76,4 +76,33 @@ public class Vector3D {
 		setY(center.getY() + ((y1 * cos) + (z1 * sin)));
 		setZ(center.getZ() + ((z1 * cos) - (y1 * sin)));
 	}
+
+	public double distanceSquared(Vector3D p2) {
+	double x = p2.getX()-getX();
+		double y = p2.getY()-getY();
+		double z = p2.getZ()-getZ();
+		return (x*x)+(y*y)+(z*z);
+	}
+
+	public void add(Vector3D dif) {
+		this.x += dif.getX();
+		this.y += dif.getY();
+		this.z += dif.getZ();
+	}
+	public void subtract(Vector3D dif) {
+		this.x -= dif.getX();
+		this.y -= dif.getY();
+		this.z -= dif.getZ();
+	}
+
+	public double length() {
+		return Math.sqrt(distanceSquared(new Vector3D(0,0,0)));
+	}
+
+	public void normalize() {
+		double length = length();
+		this.x  /= length;
+		this.y  /= length;
+		this.z  /= length;
+	}
 }

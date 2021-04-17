@@ -38,6 +38,18 @@ public class Triangle {
 		}
 	}
 
+	public Vector3D getNormal(){
+		Vector3D u = new Vector3D(getTrues()[1].getX() - getTrues()[0].getX(), getTrues()[1].getY()- getTrues()[0].getY(), getTrues()[1].getZ()- getTrues()[0].getZ());
+		Vector3D v = new Vector3D(getTrues()[2].getX() - getTrues()[1].getX(), getTrues()[2].getY()- getTrues()[1].getY(), getTrues()[2].getZ()- getTrues()[1].getZ());
+
+		double normalx = (u.getY()*u.getZ()) - (u.getZ()*v.getY());
+		double normaly = (u.getZ()*u.getX()) - (u.getX()*v.getZ());
+		double normalz = (u.getX()*u.getY()) - (u.getY()*v.getZ());
+
+		Vector3D normal = new Vector3D(normalx,normaly,normalz);
+		return normal;
+	}
+
 
 	public Triangle(Triangle t1) {
 		triangle[0]=new Vector3D(t1.getVertexes()[0]);
@@ -87,7 +99,11 @@ public class Triangle {
 		return dis/3;
 	}
 	public double getAverageDistance(World world){
-		return Math.sqrt(getAverageDistanceSquared(world));
+		double dis = 0;
+		dis += MathUtil.distanceSquared(triangle[0],world.camera.getLocation());
+		dis += MathUtil.distanceSquared(triangle[1],world.camera.getLocation());
+		dis += MathUtil.distanceSquared(triangle[2],world.camera.getLocation());
+		return Math.sqrt(dis)/3;
 	}
 
 	public Vector3D[] getTrues() {
@@ -95,5 +111,26 @@ public class Triangle {
 	}
 	public Vector3D[] getVertexes() {
 		return triangle;
+	}
+
+	public Double getFurthestDistance(World world) {
+		double dis = MathUtil.distanceSquared(triangle[0],world.camera.getLocation());
+		double temp=MathUtil.distanceSquared(triangle[1],world.camera.getLocation());
+		if(temp > dis)
+			dis = temp;
+		temp=MathUtil.distanceSquared(triangle[2],world.camera.getLocation());
+		if(temp > dis)
+			dis = temp;
+		return Math.sqrt(dis);
+	}
+	public Double getClosestDistance(World world) {
+		double dis = MathUtil.distanceSquared(triangle[0],world.camera.getLocation());
+		double temp=MathUtil.distanceSquared(triangle[1],world.camera.getLocation());
+		if(temp < dis)
+			dis = temp;
+		temp=MathUtil.distanceSquared(triangle[2],world.camera.getLocation());
+		if(temp < dis)
+			dis = temp;
+		return Math.sqrt(dis);
 	}
 }

@@ -1,5 +1,6 @@
 package me.zombie_striker.game.engine.utils;
 
+import me.zombie_striker.game.engine.LightManager;
 import me.zombie_striker.game.engine.World;
 import me.zombie_striker.game.engine.data.Material;
 import me.zombie_striker.game.engine.data.TextureStitchingAlgo;
@@ -72,9 +73,11 @@ public class Draw {
 			}
 		}
 	}
-
-
 	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material) {
+		fillTriangle(bi,g,xoff,yoff,p1,p2,p3,material,0);
+	}
+
+	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, int drawExtra) {
 		int[] x = new int[3];
 		int[] y = new int[3];
 		int n;
@@ -86,6 +89,15 @@ public class Draw {
 		y[1] = (int) (yoff + p2.getY());
 		y[2] = (int) (yoff + p3.getY());
 
+		n = 3;
+
+		fillTriangle(bi,g,xoff,yoff,x,y,n,material, drawExtra);
+	}
+
+	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material) {
+		fillTriangle(bi,g,xoff,yoff,x,y,n,material,0);
+	}
+	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material, int drawExtra) {
 		int bix = 0;
 		int biy = 0;
 		int bixmin = Integer.MAX_VALUE;
@@ -111,14 +123,64 @@ public class Draw {
 			return;
 		}
 
-		n = 3;
+		/*for (int i = 0; i < x.length; i++) {
+			int ytemp = y[i];
+			int xtemp = x[i];
+			if (ytemp < 0) {
+				int[] x1 = MathUtil.copy(x);
+				int[] y1 = MathUtil.copy(y);
+				if(i==0) {
+					x1[2] = x1[0];
+					y1[2] = y1[0];
+					x1[0] = 0;
+					y1[0] = 0;
+				}
+				if(i==1) {
+					x1[0] = x1[1];
+					y1[0] = y1[1];
+					x1[1] = 0;
+					y1[1] = 0;
+				}
+				if(i==2) {
+					x1[1] = x1[2];
+					y1[1] = y1[2];
+					x1[2] = 0;
+					y1[2] = 0;
+				}
+				if(drawExtra<=20)
+				fillTriangle(bi,g,xoff,yoff,x1,y1,n,material,drawExtra+1);
+				y[i] = 0;
+			}
+			if (ytemp > bi.getHeight()) {
+				int[] x1 = MathUtil.copy(x);
+				int[] y1 = MathUtil.copy(y);
+				System.out.println(i);
+				if(i==0) {
+					x1[0] = bi.getWidth();
+					y1[0] = bi.getHeight();
+				}
+				if(i==1) {
+					x1[1] = bi.getWidth();
+					y1[1] = bi.getHeight();
+				}
+				if(i==2) {
+					x1[2] = bi.getWidth();
+					y1[2] = bi.getHeight();
+				}
+				if(drawExtra<=20)
+				fillTriangle(bi,g,xoff,yoff,x1,y1,n,material,drawExtra+1);
+				y[i] = bi.getHeight();
+			}
+			if (xtemp < 0) {
+				x[i] = 0;
+			}
+			if (xtemp > bi.getWidth()) {
+				x[i] = bi.getWidth();
+			}
+		}*/
 
-		Polygon p = new Polygon(x, y, n);  // This polygon represents a triangle with the above
-		//   vertices.
-		//g.fillPolygon(p);
-		//graphics2D.drawPolygon(p);
+		Polygon p = new Polygon(x, y, n);
 
-		//g2.fillPolygon(p);
 
 		if (material != null) {
 
@@ -206,15 +268,15 @@ public class Draw {
 	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop) {
 
 		if (triangle.getColor() != null)
-			g.setColor(triangle.getColor());
-		double cosy = Math.cos(world.camera.getYawRadians());
+			g.setColor(LightManager.getColorFromLightsources(triangle,world));
+		/*double cosy = Math.cos(world.camera.getYawRadians());
 		double siny = Math.sin(world.camera.getYawRadians());
 
 		double cosp = Math.cos(world.camera.getPitchRadians());
 		double sinp = Math.sin(world.camera.getPitchRadians());
 
 		double cosr = Math.cos(world.camera.getRollRadians());
-		double sinr = Math.sin(world.camera.getRollRadians());
+		double sinr = Math.sin(world.camera.getRollRadians());*/
 
 		/*double cosPitch = Math.cos(world.camera.getPitchRadians());
 		double sinPitch = Math.sin(world.camera.getPitchRadians()); // Pitch is the altitude of the forward vector off the xy plane, toward the down direction.
@@ -237,12 +299,12 @@ public class Draw {
 		double xdifC = (triangle.getPoints()[2].getX() - world.camera.getLocation().getX());
 
 
-		double zxdistance1 = (cosy * zdifA) - (siny * xdifA); // Col 3
+		/*double zxdistance1 = (cosy * zdifA) - (siny * xdifA); // Col 3
 		double xzdistance1 = (cosy * xdifA) + (siny * zdifA); //Col 2
 		double zxdistance2 = (cosy * zdifB) - (siny * xdifB);
 		double xzdistance2 = (cosy * xdifB) + (siny * zdifB);
 		double zxdistance3 = (cosy * zdifC) - (siny * xdifC);
-		double xzdistance3 = (cosy * xdifC) + (siny * zdifC);
+		double xzdistance3 = (cosy * xdifC) + (siny * zdifC);*/
 
 		double x1 = (((xdifA) / (zdifA)));
 		double x2 = (((xdifB) / (zdifB)));
@@ -279,7 +341,18 @@ public class Draw {
 		point2.multiply(bi.getHeight() / 2);
 		point3.multiply(bi.getHeight() / 2);
 
-		if (point1.getX() > bi.getWidth())
+		if (point1.isInfinite()) {
+			return;
+		}
+		if (point2.isInfinite()) {
+			return;
+		}
+
+		if (point3.isInfinite()) {
+			return;
+		}
+
+		/*if (point1.getX() > bi.getWidth())
 			return;
 		if (point1.getX() < -bi.getWidth())
 			return;
@@ -292,7 +365,7 @@ public class Draw {
 		if (point3.getX() > bi.getWidth())
 			return;
 		if (point3.getX() < -bi.getWidth())
-			return;
+			return;*/
 
 		fillTriangle(bi, g, x, y, point1, point2, point3, triangle.getMaterial());
 

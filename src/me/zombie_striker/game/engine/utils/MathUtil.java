@@ -16,9 +16,11 @@ public class MathUtil {
 
 		int x1 = (int) (p1.getX() - p2.getX());
 		int z1 = (int) (p1.getZ() - p2.getZ());
+		int y1 = (int) (p1.getY() - p2.getY());
 
 		dif += (x1) * (x1);
 		dif += (z1) * (z1);
+		dif += (y1) * (y1);
 		return dif;
 	}
 
@@ -36,5 +38,11 @@ public class MathUtil {
 			}
 		}
 		return newmat;
+	}
+	public static int[] copy(int[] src){
+		int[] y1 = new int[3];
+		for(int i = 0; i < y1.length;i++)
+		y1[i]=src[i];
+		return y1;
 	}
 }

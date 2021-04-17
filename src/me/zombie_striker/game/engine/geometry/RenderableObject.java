@@ -32,6 +32,7 @@ public abstract class RenderableObject{
 
 	public void updateTriangles() {
 		for (Triangle t : sides) {
+			if(t!=null)
 			for (int i = 0; i < t.getTrues().length; i++) {
 				t.getVertexes()[i] = new Vector3D(t.getTrues()[i]);
 				t.getVertexes()[i].rotatePitch(getPitch(), getCenter(Main.game.getWorld()));
