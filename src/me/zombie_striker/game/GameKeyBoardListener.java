@@ -20,6 +20,14 @@ public class GameKeyBoardListener implements KeyListener {
 			Main.game.left = active;
 		if(e.getKeyCode()==KeyEvent.VK_D)
 			Main.game.right = active;
+		if(e.getKeyCode()==KeyEvent.VK_J)
+			Main.game.j = active;
+		if(e.getKeyCode()==KeyEvent.VK_L)
+			Main.game.l = active;
+		if(e.getKeyCode()==KeyEvent.VK_I)
+			Main.game.i = active;
+		if(e.getKeyCode()==KeyEvent.VK_K)
+			Main.game.k = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
 			Main.game.turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)
@@ -42,6 +50,14 @@ public class GameKeyBoardListener implements KeyListener {
 			Main.game.left = active;
 		if(e.getKeyCode()==KeyEvent.VK_D)
 			Main.game.right = active;
+		if(e.getKeyCode()==KeyEvent.VK_J)
+			Main.game.j = active;
+		if(e.getKeyCode()==KeyEvent.VK_L)
+			Main.game.l = active;
+		if(e.getKeyCode()==KeyEvent.VK_I)
+			Main.game.i = active;
+		if(e.getKeyCode()==KeyEvent.VK_K)
+			Main.game.k = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
 			Main.game.turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)

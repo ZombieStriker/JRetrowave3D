@@ -5,10 +5,10 @@ import java.awt.image.BufferedImage;
 
 public class Plane {
 
-	private Location[] points = new Location[2];
+	private Vector3D[] points = new Vector3D[2];
 	private BufferedImage texture;
 
-	public Plane(Location p1, Location p2) {
+	public Plane(Vector3D p1, Vector3D p2) {
 		points[0] = p1;
 		points[1] = p2;
 	}
@@ -21,10 +21,10 @@ public class Plane {
 		this.texture = texture;
 	}
 
-	public Location getLocation() {
+	public Vector3D getLocation() {
 		return points[0];
 	}
-	public Location getLocation2() {
+	public Vector3D getLocation2() {
 		return points[1];
 	}
 }

@@ -1,15 +1,12 @@
 package me.zombie_striker.game.engine.data;
 
-public class Location {
-
+public class Vector2D {
 	private double x;
 	private double y;
-	private double z;
 
-	public Location(double x, double y, double z){
+	public Vector2D(double x, double y){
 		this.x=x;
 		this.y=y;
-		this.z=z;
 	}
 
 
@@ -29,11 +26,9 @@ public class Location {
 		this.y = y;
 	}
 
-	public double getZ() {
-		return z;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
+	public Vector2D multiply(double d){
+		x*=d;
+		y*=d;
+		return this;
 	}
 }

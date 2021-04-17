@@ -1,6 +1,6 @@
 package me.zombie_striker.game.engine;
 
-import me.zombie_striker.game.engine.data.Location;
+import me.zombie_striker.game.engine.data.Vector3D;
 import me.zombie_striker.game.engine.data.Triangle;
 import me.zombie_striker.game.engine.geometry.RenderableObject;
 import me.zombie_striker.game.engine.utils.Draw;
@@ -17,14 +17,14 @@ public class World {
 	public Camera camera;
 
 	public World(int x, int y) {
-		camera = new Camera(new Location(x, 1, y));
+		camera = new Camera(new Vector3D(x, 1, y));
 	}
 
-	public RenderableObject collidesWith(Location location) {
+	public RenderableObject collidesWith(Vector3D location) {
 		return collidesWith(location, 0);
 	}
 
-	public RenderableObject collidesWith(Location location, double size) {
+	public RenderableObject collidesWith(Vector3D location, double size) {
 		for (RenderableObject r : toRender) {
 			if (r.isInside(location, size))
 				return r;
@@ -38,8 +38,8 @@ public class World {
 
 		screen.setColor(new Color(100, 100, 100));
 		screen.fillRect(0, 0, bi.getWidth(), bi.getHeight());
-		screen.setColor(new Color(45, 45, 45));
-		screen.fillRect(0, bi.getHeight() / 2 + (bi.getHeight() / 80), bi.getWidth(), bi.getHeight());
+		//screen.setColor(new Color(45, 45, 45));
+		//screen.fillRect(0, bi.getHeight() / 2 + (bi.getHeight() / 80), bi.getWidth(), bi.getHeight());
 
 		/*screen.setColor(new Color(183, 10, 238));
 		for (int line = 1; line < 80; line++) {
@@ -48,11 +48,12 @@ public class World {
 
 		HashMap<Triangle, Double> treeMap = new HashMap<>();
 		for (RenderableObject renderableObject : toRender) {
-			for (Triangle t : renderableObject.getObjectsToRender(this)) {
+			for (Triangle t : renderableObject.getTrianglesForRendering(this)) {
 				if (t != null) {
+					//TODO: TESTING
 					boolean pointInFieldOfView = false;
-					for (Location loc : t.getPoints()) {
-						if (camera.getYaw() > 45 && camera.getYaw() <= 135) {
+					for (Vector3D loc : t.getPoints()) {
+						/*if (camera.getYaw() > 45 && camera.getYaw() <= 135) {
 							if (loc.getX() <= camera.getLocation().getX()) {
 								pointInFieldOfView = true;
 								break;
@@ -67,12 +68,12 @@ public class World {
 								pointInFieldOfView = true;
 								break;
 							}
-						} else {
+						} else {*/
 							if (loc.getZ() >= camera.getLocation().getZ()) {
 								pointInFieldOfView = true;
 								break;
 							}
-						}
+						//}
 					}
 					if (pointInFieldOfView)
 						treeMap.put(t, t.getAverageDistanceSquared(this));
