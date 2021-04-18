@@ -1,8 +1,7 @@
 package me.zombie_striker.game;
 
-import me.zombie_striker.game.engine.geometry.RenderableObject;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 
-import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

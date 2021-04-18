@@ -1,4 +1,4 @@
-package me.zombie_striker.game.engine.data;
+package me.zombie_striker.jretrowave3d.data;
 
 public class Light {
 

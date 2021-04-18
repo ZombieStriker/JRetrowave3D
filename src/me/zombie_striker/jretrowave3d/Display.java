@@ -1,4 +1,4 @@
-package me.zombie_striker.game.engine;
+package me.zombie_striker.jretrowave3d;
 
 import javax.swing.*;
 import java.awt.*;

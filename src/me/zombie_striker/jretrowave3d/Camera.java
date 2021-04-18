@@ -1,6 +1,6 @@
-package me.zombie_striker.game.engine;
+package me.zombie_striker.jretrowave3d;
 
-import me.zombie_striker.game.engine.data.Vector3D;
+import me.zombie_striker.jretrowave3d.data.Vector3D;
 
 public class Camera {
 
@@ -9,7 +9,7 @@ public class Camera {
 	private double yaw = 0;
 	private double pitch = 0;
 	private double roll = 0;
-	private double fov = Math.toRadians(90);
+	private double fov = Math.toRadians(120);
 
 	public Camera(Vector3D personLocation) {
 		this.personLocation = personLocation;

@@ -1,9 +1,8 @@
 package me.zombie_striker.game;
 
-import me.zombie_striker.game.engine.Window;
+import me.zombie_striker.jretrowave3d.Window;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Main {
 

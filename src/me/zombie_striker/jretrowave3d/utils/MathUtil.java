@@ -1,9 +1,6 @@
-package me.zombie_striker.game.engine.utils;
+package me.zombie_striker.jretrowave3d.utils;
 
-import me.zombie_striker.game.engine.data.Vector3D;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import me.zombie_striker.jretrowave3d.data.Vector3D;
 
 public class MathUtil {
 

@@ -1,4 +1,4 @@
-package me.zombie_striker.game.engine.data;
+package me.zombie_striker.jretrowave3d.data;
 
 public class Vector3D {
 
@@ -11,7 +11,8 @@ public class Vector3D {
 		this.y = y;
 		this.z = z;
 	}
-	public Vector3D(Vector3D vector3D){
+
+	public Vector3D(Vector3D vector3D) {
 		this.x = vector3D.getX();
 		this.y = vector3D.getY();
 		this.z = vector3D.getZ();
@@ -53,7 +54,6 @@ public class Vector3D {
 	public void rotateYaw(double yawRadians, Vector3D center) {
 
 
-
 		double x1 = getX() - center.getX();
 		double z1 = getZ() - center.getZ();
 
@@ -63,8 +63,8 @@ public class Vector3D {
 		setX(center.getX() + ((x1 * cos) - (z1 * sin)));
 		setZ(center.getZ() + ((z1 * cos) + (x1 * sin)));
 	}
-	public void rotatePitch(double pitchRadians, Vector3D center) {
 
+	public void rotatePitch(double pitchRadians, Vector3D center) {
 
 
 		double y1 = getY() - center.getY();
@@ -78,10 +78,10 @@ public class Vector3D {
 	}
 
 	public double distanceSquared(Vector3D p2) {
-	double x = p2.getX()-getX();
-		double y = p2.getY()-getY();
-		double z = p2.getZ()-getZ();
-		return (x*x)+(y*y)+(z*z);
+		double x = getX() - p2.getX();
+		double y = getY() - p2.getY();
+		double z = getZ() - p2.getZ();
+		return (x * x) + (y * y) + (z * z);
 	}
 
 	public void add(Vector3D dif) {
@@ -89,6 +89,7 @@ public class Vector3D {
 		this.y += dif.getY();
 		this.z += dif.getZ();
 	}
+
 	public void subtract(Vector3D dif) {
 		this.x -= dif.getX();
 		this.y -= dif.getY();
@@ -96,13 +97,13 @@ public class Vector3D {
 	}
 
 	public double length() {
-		return Math.sqrt(distanceSquared(new Vector3D(0,0,0)));
+		return Math.sqrt(distanceSquared(new Vector3D(0, 0, 0)));
 	}
 
 	public void normalize() {
 		double length = length();
-		this.x  /= length;
-		this.y  /= length;
-		this.z  /= length;
+		this.x /= length;
+		this.y /= length;
+		this.z /= length;
 	}
 }

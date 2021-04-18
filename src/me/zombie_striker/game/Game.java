@@ -1,10 +1,10 @@
 package me.zombie_striker.game;
 
-import me.zombie_striker.game.engine.World;
-import me.zombie_striker.game.engine.data.BlockFace;
-import me.zombie_striker.game.engine.data.Light;
-import me.zombie_striker.game.engine.data.Vector3D;
-import me.zombie_striker.game.engine.geometry.*;
+import me.zombie_striker.jretrowave3d.World;
+import me.zombie_striker.jretrowave3d.data.BlockFace;
+import me.zombie_striker.jretrowave3d.data.Light;
+import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.geometry.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -46,20 +46,37 @@ public class Game {
 
 	public void init() {
 		try {
-			Light light = new Light(new Vector3D(500.5,5,500.5),10);
+			Light light = new Light(new Vector3D(500,5,500),3);
 			world.registerLight(light);
-			FlatPlane plane = new FlatPlane(new Vector3D(500, 2, 5010), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 1,1);
+			//Light light2 = new Light(new Vector3D(500,5,512),10);
+			//world.registerLight(light2);
+			/*FlatPlane plane = new FlatPlane(new Vector3D(500, 2, 5010), ImageIO.read(getClass().getResourceAsStream("/textures/test.png")), 1,1);
 			world.toRender.add(plane);
 			Floor floor = new Floor(new Vector3D(500, 0, 500), 10,10);
-			world.toRender.add(floor);
+			world.toRender.add(floor);*/ImageIO.read(getClass().getResourceAsStream("/textures/test.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		Cube cube2 = new Cube(new Vector3D(500, 0, 520), 2, 2, 2);
+		PolyCylinder cylinder = new PolyCylinder(new Vector3D(500, 0, 506), 20,2, 2, 2);
+		world.toRender.add(cylinder);
+		PolyCylinder cylinder2 = new PolyCylinder(new Vector3D(500, 0, 500-6), 20,2, 2, 2);
+		world.toRender.add(cylinder2);
+		PolyCylinder cylinder3 = new PolyCylinder(new Vector3D(506, 0, 500), 20,2, 2, 2);
+		world.toRender.add(cylinder3);
+		PolyCylinder cylinder4 = new PolyCylinder(new Vector3D(500-6, 0, 500), 20,2, 2, 2);
+		world.toRender.add(cylinder4);
+		/*PolyCylinder cylinder = new PolyCylinder(new Vector3D(500, 0, 506), 4,2, 2, 2);
+		world.toRender.add(cylinder);
+		PolyCylinder cylinder2 = new PolyCylinder(new Vector3D(506, 0, 500), 4,2, 2, 2);
+		world.toRender.add(cylinder2);
+		PolyCylinder cylinder3 = new PolyCylinder(new Vector3D(500-6, 0, 500), 4,2, 2, 2);
+		world.toRender.add(cylinder3);
+		PolyCylinder cylinder4 = new PolyCylinder(new Vector3D(500, 0, 500-6), 4,2, 2, 2);
+		world.toRender.add(cylinder4);*/
+		/*Cube cube2 = new Cube(new Vector3D(500, 0, 520), 2, 2, 2);
 		world.toRender.add(cube2);
 		Prisim prism2 = new Prisim(new Vector3D(510, 0, 520), 2, 2, 2);
-		world.toRender.add(prism2);
+		world.toRender.add(prism2);*/
 		if (true)
 			return;
 

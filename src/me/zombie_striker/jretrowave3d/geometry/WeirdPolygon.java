@@ -1,9 +1,9 @@
-package me.zombie_striker.game.engine.geometry;
+package me.zombie_striker.jretrowave3d.geometry;
 
 import me.zombie_striker.game.Main;
-import me.zombie_striker.game.engine.World;
-import me.zombie_striker.game.engine.data.Triangle;
-import me.zombie_striker.game.engine.data.Vector3D;
+import me.zombie_striker.jretrowave3d.World;
+import me.zombie_striker.jretrowave3d.data.Triangle;
+import me.zombie_striker.jretrowave3d.data.Vector3D;
 
 import java.awt.*;
 

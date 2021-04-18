@@ -1,11 +1,8 @@
-package me.zombie_striker.game.engine.utils;
+package me.zombie_striker.jretrowave3d.utils;
 
-import me.zombie_striker.game.engine.LightManager;
-import me.zombie_striker.game.engine.World;
-import me.zombie_striker.game.engine.data.Material;
-import me.zombie_striker.game.engine.data.TextureStitchingAlgo;
-import me.zombie_striker.game.engine.data.Triangle;
-import me.zombie_striker.game.engine.data.Vector2D;
+import me.zombie_striker.jretrowave3d.LightManager;
+import me.zombie_striker.jretrowave3d.World;
+import me.zombie_striker.jretrowave3d.data.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,54 +24,53 @@ public class Draw {
 			return;
 		}
 
+		if (startY == endY) {
+			int width = Math.max(endX, startX) - Math.min(startX, endX);
+			if (startX < endX) {
+				bi.fillRect(startX, startY, width, 1);
+			} else {
+				bi.fillRect(endX, startY, width, 1);
+			}
+			return;
+		}
 
 		//if (startX < endX) {
 		slope = (0.0 + endY - startY) / (endX - startX);
 		/*} else {
 			slope = (0.0 + startY - endY) / (startX - endX);
 		}*/
-
-		if (slope == 0) {
-			if (startX < endX) {
-				bi.fillRect(startX, startY, endX - startX, 1);
-			} else {
-				bi.fillRect(endX, startY, startX - endX, 1);
-			}
-		} else {
-
-
-			if (startX < endX) {
-				for (int x1 = startX; x1 < endX; x1++) {
-					double steps = ((x1 - endX) * slope);
-					if (slope < 0) {
-						if (endY + (int) ((x1 - endX) * slope) + (-slope + 1) <= startY) {
-							bi.fillRect(x1, endY + (int) steps, (1), (int) (-slope + 1));
-						} else {
-							int size = (int) (endY + (int) steps + (-slope) - startY);
-							bi.fillRect(x1 + 1, endY + (int) steps - size, (1), size);
-						}
-					} else {
-						int size = (int) Math.min(slope + 1, endY - (startY + steps));
-						bi.fillRect(x1, startY + (int) ((x1 - startX) * slope), (1), size);
-					}
-				}
-			} else {
-				for (int x1 = endX; x1 < startX; x1++) {
-					double steps = ((x1 - endX) * slope);
-
-					if (slope < 0) {
+		if (startX < endX) {
+			for (int x1 = startX; x1 < endX; x1++) {
+				double steps = ((x1 - endX) * slope);
+				if (slope < 0) {
+					if (endY + (int) ((x1 - endX) * slope) + (-slope + 1) <= startY) {
 						bi.fillRect(x1, endY + (int) steps, (1), (int) (-slope + 1));
 					} else {
-						int size = (int) Math.min(slope + 1, endY - (startY + steps));
-						bi.fillRect(x1, startY + (int) steps, (1), size);
+						int size = (int) (endY + (int) steps + (-slope) - startY);
+						bi.fillRect(x1 + 1, endY + (int) steps - size, (1), size);
 					}
+				} else {
+					int size = (int) Math.min(slope + 1, endY - (startY + steps));
+					bi.fillRect(x1, startY + (int) ((x1 - startX) * slope), (1), size);
 				}
-
 			}
+		} else {
+			for (int x1 = endX; x1 < startX; x1++) {
+				double steps = ((x1 - endX) * slope);
+
+				if (slope < 0) {
+					bi.fillRect(x1, endY + (int) steps, (1), (int) (-slope + 1));
+				} else {
+					int size = (int) Math.min(slope + 1, endY - (startY + steps));
+					bi.fillRect(x1, startY + (int) steps, (1), size);
+				}
+			}
+
 		}
 	}
+
 	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material) {
-		fillTriangle(bi,g,xoff,yoff,p1,p2,p3,material,0);
+		fillTriangle(bi, g, xoff, yoff, p1, p2, p3, material, 0);
 	}
 
 	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, int drawExtra) {
@@ -91,12 +87,13 @@ public class Draw {
 
 		n = 3;
 
-		fillTriangle(bi,g,xoff,yoff,x,y,n,material, drawExtra);
+		fillTriangle(bi, g, xoff, yoff, x, y, n, material, drawExtra);
 	}
 
 	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material) {
-		fillTriangle(bi,g,xoff,yoff,x,y,n,material,0);
+		fillTriangle(bi, g, xoff, yoff, x, y, n, material, 0);
 	}
+
 	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material, int drawExtra) {
 		int bix = 0;
 		int biy = 0;
@@ -264,11 +261,68 @@ public class Draw {
 		return interoperated;
 	}
 
+	public static void drawLine(BufferedImage bi, Graphics2D g, World world, int x, int y, Line line) {
+		double cosy = Math.cos(world.camera.getYawRadians());
+		double siny = Math.sin(world.camera.getYawRadians());
+
+		double zdifA = (line.getStart().getZ() - world.camera.getLocation().getZ());
+		double ydifA = (line.getStart().getY() - world.camera.getLocation().getY());
+		double xdifA = (line.getStart().getX() - world.camera.getLocation().getX());
+
+		double zdifB = (line.getEnd().getZ() - world.camera.getLocation().getZ());
+		double ydifB = (line.getEnd().getY() - world.camera.getLocation().getY());
+		double xdifB = (line.getEnd().getX() - world.camera.getLocation().getX());
+
+
+		double zxdistance1 = (cosy * zdifA) - (siny * xdifA); // Col 3
+		double xzdistance1 = (cosy * xdifA) + (siny * zdifA); //Col 2
+		double zxdistance2 = (cosy * zdifB) - (siny * xdifB);
+		double xzdistance2 = (cosy * xdifB) + (siny * zdifB);
+
+
+		/*double x1 = (((xdifA) / (zdifA)));
+		double x2 = (((xdifB) / (zdifB)));
+
+		double y1 = ((((-ydifA / (zdifA)))));
+		double y2 = ((((-ydifB / (zdifB)))));*/
+		double x1 = (((xzdistance1) / (zxdistance1)));
+		double x2 = (((xzdistance2) / (zxdistance2)));
+		double y1 = ((((-ydifA / (zxdistance1)))));
+		double y2 = ((((-ydifB / (zxdistance2)))));
+		Vector2D point1 = new Vector2D(x1, y1);
+		Vector2D point2 = new Vector2D(x2, y2);
+		point1.multiply(bi.getHeight() / 2);
+		point2.multiply(bi.getHeight() / 2);
+
+		System.out.println(point1.getX() + "    " + point1.getY() + "    " + point2.getX() + "    " + point2.getY());
+
+		if (Double.isInfinite(x1))
+			return;
+		if (Double.isInfinite(y1))
+			return;
+		if (Double.isInfinite(x2))
+			return;
+		if (Double.isInfinite(y2))
+			return;
+
+		drawLine(g, (int) point1.getX() + x, (int) point1.getY() + y, (int) point2.getX() + x, (int) point2.getY() + y);
+
+	}
+
 
 	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop) {
+		drawTriangle(bi,g,world,x,y,triangle,istop,false);
+	}
+	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop, boolean drawingNormal) {
 
-		if (triangle.getColor() != null)
-			g.setColor(LightManager.getColorFromLightsources(triangle,world));
+		if(drawingNormal){
+			if (triangle.getColor() != null)
+				g.setColor(triangle.getColor());
+
+		}else {
+			if (triangle.getColor() != null)
+				g.setColor(LightManager.getColorFromLightsources(triangle, world));
+		}
 		/*double cosy = Math.cos(world.camera.getYawRadians());
 		double siny = Math.sin(world.camera.getYawRadians());
 
@@ -347,10 +401,10 @@ public class Draw {
 		if (point2.isInfinite()) {
 			return;
 		}
-
 		if (point3.isInfinite()) {
 			return;
 		}
+
 
 		/*if (point1.getX() > bi.getWidth())
 			return;
@@ -369,15 +423,23 @@ public class Draw {
 
 		fillTriangle(bi, g, x, y, point1, point2, point3, triangle.getMaterial());
 
+		if(!drawingNormal) {
+			Vector3D normal = triangle.getNormal(false);
+			normal.normalize();
+			Line line = new Line(triangle.getRelativeLocation()[0], new Vector3D(triangle.getRelativeLocation()[0].getX() - normal.getX(), triangle.getRelativeLocation()[0].getY() - normal.getY(), triangle.getRelativeLocation()[0].getZ() - normal.getZ()));
+			//g.setColor(new Color(255, 0, 255));
+			//drawLine(bi, g, world, x, y, line);
+			drawTriangle(bi, g, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX()+0.01,line.getEnd().getY(),line.getEnd().getZ()+0.1), new Color(255, 0, 160)), false, true);
+		}
 		//if (color == null)
-		g.setColor(new Color(255, 0, 0));
+	/*	g.setColor(new Color(255, 0, 0));
 		drawLine(g, (int) (point1.getX() + x), (int) (point1.getY() + y), (int) (point2.getX() + x), (int) (point2.getY() + y));
 		//if (color == null)
 		g.setColor(new Color(0, 255, 0));
 		drawLine(g, (int) (point1.getX() + x), (int) (point1.getY() + y), (int) (point3.getX() + x), (int) (point3.getY() + y));
 		//if (color == null)
 		g.setColor(new Color(0, 0, 255));
-		drawLine(g, (int) (point3.getX() + x), (int) (point3.getY() + y), (int) (point2.getX() + x), (int) (point2.getY() + y));
+		drawLine(g, (int) (point3.getX() + x), (int) (point3.getY() + y), (int) (point2.getX() + x), (int) (point2.getY() + y));*/
 	}
 
 }

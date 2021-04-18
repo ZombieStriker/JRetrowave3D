@@ -1,10 +1,11 @@
-package me.zombie_striker.game.engine;
+package me.zombie_striker.jretrowave3d;
 
-import me.zombie_striker.game.engine.data.Light;
-import me.zombie_striker.game.engine.data.Vector3D;
-import me.zombie_striker.game.engine.data.Triangle;
-import me.zombie_striker.game.engine.geometry.RenderableObject;
-import me.zombie_striker.game.engine.utils.Draw;
+import me.zombie_striker.jretrowave3d.data.Direction;
+import me.zombie_striker.jretrowave3d.data.Light;
+import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.data.Triangle;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
+import me.zombie_striker.jretrowave3d.utils.Draw;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -55,6 +56,7 @@ public class World {
 				if (t != null) {
 					//TODO: TESTING
 					boolean pointInFieldOfView = false;
+					Direction sideOfScreen = null;
 					for (Vector3D loc : t.getPoints()) {
 						/*if (camera.getYaw() > 45 && camera.getYaw() <= 135) {
 							if (loc.getX() <= camera.getLocation().getX()) {
@@ -73,6 +75,22 @@ public class World {
 							}
 						} else {*/
 							if (loc.getZ() >= camera.getLocation().getZ()) {
+								if(sideOfScreen == null){
+									if(loc.getX() >= camera.getLocation().getX()){
+										sideOfScreen=Direction.RIGHT;
+									}else{
+										sideOfScreen=Direction.LEFT;
+									}
+								}
+								double theta = Math.atan((camera.getLocation().getX()-loc.getX())/(camera.getLocation().getZ()-loc.getZ()));
+								if(theta-(camera.getFOV()/2) >= 0 && theta-(camera.getFOV()/2)<=camera.getFOV()) {
+									continue;
+								}else if(-theta-(camera.getFOV()/2) >= 0 && -theta-(camera.getFOV()/2)<=camera.getFOV()){
+										continue;
+								}
+								if((loc.getX() >= camera.getLocation().getX()) != (sideOfScreen==Direction.RIGHT) ){
+									continue;
+								}
 								pointInFieldOfView = true;
 								break;
 							}
