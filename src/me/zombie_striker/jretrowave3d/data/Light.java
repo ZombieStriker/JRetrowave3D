@@ -15,4 +15,8 @@ public class Light {
 	public double getIntensity(){
 		return intensity;
 	}
+	public void teleport(Vector3D location){
+		this.location = location;
+
+	}
 }

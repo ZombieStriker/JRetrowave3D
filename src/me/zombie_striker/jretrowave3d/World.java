@@ -5,6 +5,7 @@ import me.zombie_striker.jretrowave3d.data.Light;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
 import me.zombie_striker.jretrowave3d.data.Triangle;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
+import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 import me.zombie_striker.jretrowave3d.utils.Draw;
 
 import java.awt.*;
@@ -14,8 +15,16 @@ import java.util.*;
 
 public class World {
 
-	public List<RenderableObject> toRender = new ArrayList<>();
-	private List<Light> lights = new ArrayList<>();
+	private Set<RenderableObject> toRender = new HashSet<>();
+	private Set<Light> lights = new HashSet<>();
+	private Set<BoundingBox> boundingBoxes = new HashSet<>();
+
+	public void registerBoundingBox(BoundingBox box){
+		boundingBoxes.add(box);
+	}
+	public void registerObjectToRender(RenderableObject object){
+		this.toRender.add(object);
+	}
 
 	public Camera camera;
 
@@ -23,11 +32,11 @@ public class World {
 		camera = new Camera(new Vector3D(x, 1, y));
 	}
 
-	public RenderableObject collidesWith(Vector3D location) {
-		return collidesWith(location, 0);
+	public RenderableObject renderCollidesWith(Vector3D location) {
+		return renderCollidesWith(location, 0);
 	}
 
-	public RenderableObject collidesWith(Vector3D location, double size) {
+	public RenderableObject renderCollidesWith(Vector3D location, double size) {
 		for (RenderableObject r : toRender) {
 			if (r.isInside(location, size))
 				return r;
@@ -97,7 +106,8 @@ public class World {
 						//}
 					}
 					if (pointInFieldOfView) {
-						triangleMap.put(t, t.getFurthestDistance(this));
+						triangleMap.put(t, t.getClosestDistance(this));
+						triangleHeightDifMap.put(t,Math.abs(t.getCenter().getY()-camera.getLocation().getY()));
 					}
 				}
 			}
@@ -109,6 +119,11 @@ public class World {
 				if (false) {
 					return o1.getValue().compareTo(o2.getValue());
 				} else {
+					if(o2.getValue().equals(o1.getValue())) {
+						if (!triangleHeightDifMap.get(o1.getKey()).equals(triangleHeightDifMap.get(o2.getKey()))) {
+							return triangleHeightDifMap.get(o2.getKey()).compareTo(triangleHeightDifMap.get(o1.getKey()));
+						}
+					}
 					return o2.getValue().compareTo(o1.getValue());
 				}
 			}
@@ -122,7 +137,7 @@ public class World {
 
 		for (Triangle plane : sortedMap.keySet()) {
 			if (plane != null) {
-				Draw.drawTriangle(bi, screen, this, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), plane, false);
+				Draw.drawTriangle(bi, screen, this, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), plane, true);
 			}
 		}
 		//Triangle triangle = new Triangle(new Location(1,1,0),new Location2D(0,0),new Location2D(0,50), new Location2D(25,0));
@@ -133,11 +148,14 @@ public class World {
 		screen.dispose();
 	}
 
-	public List<Light> getLights() {
+	public Set<Light> getLights() {
 		return lights;
 	}
-	public List<RenderableObject> getRenderableObjects(){
+	public Set<RenderableObject> getRenderableObjects(){
 		return toRender;
+	}
+	public Set<BoundingBox> getBoundingBoxes(){
+		return boundingBoxes;
 	}
 
 	public void registerLight(Light light) {

@@ -3,10 +3,11 @@ JRetrowave3D is a 3-D game engine written purely in Java. This was written as a 
 
 # Features
 * Easy to use format to easily add objects with java.
-* Supports Doom-like movement. ~~(Full 3D pitch rotation will be added soon.)~~
+* Supports Doom-like movement. 
 * Supports pitch and yaw rotation
+* Supports dynamic lighting
+* Supports physics objects
 
 # Todo:
-* ~~Pitch~~
 * Object Texturing
 * World Editor

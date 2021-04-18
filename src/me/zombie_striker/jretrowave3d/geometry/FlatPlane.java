@@ -1,6 +1,7 @@
 package me.zombie_striker.jretrowave3d.geometry;
 
 import me.zombie_striker.game.Main;
+import me.zombie_striker.jretrowave3d.JRetroWave3D;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.Triangle;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
@@ -20,6 +21,11 @@ public class FlatPlane extends RenderableObject {
 
 	private double yaw = 0;
 	private double pitch = 0;
+
+	@Override
+	public void teleport(Vector3D location) {
+		center = location;
+	}
 
 	public FlatPlane(Vector3D center, BufferedImage bi, int height, int size) {
 		super(2);
@@ -95,10 +101,10 @@ public class FlatPlane extends RenderableObject {
 		for (Triangle t : array) {
 			for (int i = 0; i < t.getTrues().length; i++) {
 				t.getRelativeLocation()[i] = new Vector3D(t.getTrues()[i]);
-				t.getRelativeLocation()[i].rotatePitch(getPitch(), getCenter(Main.game.getWorld()));
-				t.getRelativeLocation()[i].rotateYaw(getYaw(), getCenter(Main.game.getWorld()));
-				t.getRelativeLocation()[i].rotateYaw(-Main.game.getWorld().camera.getYawRadians(), Main.game.getWorld().camera.getLocation());
-				t.getRelativeLocation()[i].rotatePitch(Main.game.getWorld().camera.getPitchRadians(), Main.game.getWorld().camera.getLocation());
+				t.getRelativeLocation()[i].rotatePitch(getPitch(), getCenter(JRetroWave3D.getGame().getWorld()));
+				t.getRelativeLocation()[i].rotateYaw(getYaw(), getCenter(JRetroWave3D.getGame().getWorld()));
+				t.getRelativeLocation()[i].rotateYaw(-JRetroWave3D.getGame().getWorld().camera.getYawRadians(), JRetroWave3D.getGame().getWorld().camera.getLocation());
+				t.getRelativeLocation()[i].rotatePitch(JRetroWave3D.getGame().getWorld().camera.getPitchRadians(), JRetroWave3D.getGame().getWorld().camera.getLocation());
 			}
 		}
 	}

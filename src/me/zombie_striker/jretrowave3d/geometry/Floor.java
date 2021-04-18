@@ -11,8 +11,6 @@ import java.util.Arrays;
 
 public class Floor extends RenderableObject {
 
-	private boolean[] hiddenFaces = new boolean[6];
-
 
 	private double yaw = 0;
 	private double pitch = 0;
@@ -132,6 +130,14 @@ public class Floor extends RenderableObject {
 	}
 
 	@Override
+	public void teleport(Vector3D location) {
+		Vector3D dif = new Vector3D(topCorner);
+		dif.subtract(bottomCorner);
+		bottomCorner = location;
+		topCorner = new Vector3D(location);
+		topCorner.add(dif);
+	}
+	@Override
 	public Triangle[] getAllTriangles(World world) {
 		return getTriangles();
 	}
@@ -155,7 +161,4 @@ public class Floor extends RenderableObject {
 		return new Vector3D((topCorner.getX() + bottomCorner.getX()) / 2, (topCorner.getY() + bottomCorner.getY()) / 2, (topCorner.getZ() + bottomCorner.getZ()) / 2);
 	}
 
-	public void setHiddenFaces(BlockFace f, boolean b) {
-		hiddenFaces[f.getIndex()] = b;
-	}
 }

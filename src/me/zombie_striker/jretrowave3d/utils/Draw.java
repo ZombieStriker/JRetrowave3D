@@ -310,16 +310,17 @@ public class Draw {
 	}
 
 
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop) {
-		drawTriangle(bi,g,world,x,y,triangle,istop,false);
+	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean drawNormal) {
+		drawTriangle(bi, g, world, x, y, triangle, drawNormal, false);
 	}
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean istop, boolean drawingNormal) {
 
-		if(drawingNormal){
+	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal) {
+
+		if (drawingNormal) {
 			if (triangle.getColor() != null)
 				g.setColor(triangle.getColor());
 
-		}else {
+		} else {
 			if (triangle.getColor() != null)
 				g.setColor(LightManager.getColorFromLightsources(triangle, world));
 		}
@@ -370,6 +371,50 @@ public class Draw {
 		double y1 = ((((-ydifA / (zdifA)))));
 		double y2 = ((((-ydifB / (zdifB)))));
 		double y3 = ((((-ydifC / (zdifC)))));
+
+		if (zdifA < 0) {
+			//y1=y1;
+			if (ydifA < 0) {
+				y1 += bi.getHeight();
+			} else {
+				y1 -= bi.getHeight();
+			}
+			if (xdifA < 0) {
+				x1 -= bi.getWidth();
+			} else {
+				x1 -= bi.getWidth();
+			}
+		}
+		if (zdifB < 0) {
+			//	y2=y2;
+			if (ydifB < 0) {
+				y2 += bi.getHeight();
+			} else {
+				y2-= bi.getHeight();
+			}
+			if (xdifB < 0) {
+				x2 -= bi.getWidth();
+			} else {
+				x2 -= bi.getWidth();
+			}
+			//x2+=bi.getWidth();
+			//x2=-x2;
+		}
+		if (zdifC < 0) {
+			//y3=y3;
+			if (ydifC < 0) {
+				y3 += bi.getHeight();
+			} else {
+				y3 -= bi.getHeight();
+			}
+			if (xdifC < 0) {
+				x3 -= bi.getWidth();
+			} else {
+				x3 -= bi.getWidth();
+			}
+			//	x3+=bi.getWidth();
+			//x3=-x3;
+		}
 		/*double y1 = ((((-ydifA / (zxdistance1)))));
 		double y2 = ((((-ydifB / (zxdistance2)))));
 		double y3 = ((((-ydifC / (zxdistance3)))));*/
@@ -423,13 +468,13 @@ public class Draw {
 
 		fillTriangle(bi, g, x, y, point1, point2, point3, triangle.getMaterial());
 
-		if(!drawingNormal) {
+		if (drawNormal) {
 			Vector3D normal = triangle.getNormal(false);
 			normal.normalize();
 			Line line = new Line(triangle.getRelativeLocation()[0], new Vector3D(triangle.getRelativeLocation()[0].getX() - normal.getX(), triangle.getRelativeLocation()[0].getY() - normal.getY(), triangle.getRelativeLocation()[0].getZ() - normal.getZ()));
 			//g.setColor(new Color(255, 0, 255));
 			//drawLine(bi, g, world, x, y, line);
-			drawTriangle(bi, g, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX()+0.01,line.getEnd().getY(),line.getEnd().getZ()+0.1), new Color(255, 0, 160)), false, true);
+			drawTriangle(bi, g, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01, line.getEnd().getY(), line.getEnd().getZ() + 0.1), new Color(255, 0, 160)), false, true);
 		}
 		//if (color == null)
 	/*	g.setColor(new Color(255, 0, 0));

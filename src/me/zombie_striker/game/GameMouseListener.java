@@ -1,5 +1,6 @@
 package me.zombie_striker.game;
 
+import me.zombie_striker.jretrowave3d.JRetroWave3D;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 
 import java.awt.*;
@@ -61,7 +62,7 @@ public class GameMouseListener implements MouseListener, MouseMotionListener {
 		} catch (AWTException awtException) {
 			awtException.printStackTrace();
 		}
-		if (!Main.game.isEscaped()) {
+		if (!((Game)JRetroWave3D.getGame()).isEscaped()) {
 			if (lastLocationx == -1 && lastLocationy == -1) {
 				lastLocationx = e.getX();
 				lastLocationy = e.getY();
@@ -73,17 +74,17 @@ public class GameMouseListener implements MouseListener, MouseMotionListener {
 			lastLocationx = e.getX();
 			lastLocationy = e.getY();
 
-			Main.game.getWorld().camera.setYaw((float) (Main.game.getWorld().camera.getYaw() + deltaX * mouseSensitivity));
-			for (RenderableObject renderableObject : Main.game.getWorld().toRender) {
+			JRetroWave3D.getGame().getWorld().camera.setYaw((float) (JRetroWave3D.getGame().getWorld().camera.getYaw() + deltaX * mouseSensitivity));
+			for (RenderableObject renderableObject : JRetroWave3D.getGame().getWorld().getRenderableObjects()) {
 				renderableObject.updateTriangles();
 			}
 
-			Main.game.getWorld().camera.setPitch((float) (Main.game.getWorld().camera.getPitch() - deltaY * mouseSensitivity));
-			for (RenderableObject renderableObject : Main.game.getWorld().toRender) {
+			JRetroWave3D.getGame().getWorld().camera.setPitch((float) (JRetroWave3D.getGame().getWorld().camera.getPitch() - deltaY * mouseSensitivity));
+			for (RenderableObject renderableObject : JRetroWave3D.getGame().getWorld().getRenderableObjects()) {
 				renderableObject.updateTriangles();
 			}
 			justMovedIntoScreen = true;
-			robot.mouseMove((int) Main.getWindow().getSize().getWidth()/2, (int) Main.getWindow().getSize().getHeight()/2);
+			robot.mouseMove((int) JRetroWave3D.getWindow().getSize().getWidth()/2, (int) JRetroWave3D.getWindow().getSize().getHeight()/2);
 		}
 	}
 }

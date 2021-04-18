@@ -1,7 +1,6 @@
 package me.zombie_striker.jretrowave3d.geometry;
 
 import me.zombie_striker.jretrowave3d.World;
-import me.zombie_striker.jretrowave3d.data.BlockFace;
 import me.zombie_striker.jretrowave3d.data.Material;
 import me.zombie_striker.jretrowave3d.data.Triangle;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
@@ -11,51 +10,20 @@ import java.util.Arrays;
 
 public class Cube extends RenderableObject {
 
-	private boolean[] hiddenFaces = new boolean[6];
-
-
 	private double yaw = 0;
 	private double pitch = 0;
 	private Vector3D bottomCorner;
 	private Vector3D topCorner;
 
-	public Cube(Vector3D center, double width, double height, double length) {
+	public Cube(Vector3D location, double width, double height, double length) {
 		super(12);
-		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
-		Vector3D toprightback = new Vector3D(center.getX() + width, center.getY() + height, center.getZ());
-		Vector3D topleftfront = new Vector3D(center.getX(), center.getY() + height, center.getZ() + length);
-		Vector3D topleftback = new Vector3D(center.getX(), center.getY() + height, center.getZ());
-
-		Vector3D bottomrightfront = new Vector3D(center.getX() + width, center.getY(), center.getZ() + length);
-		Vector3D bottomrightback = new Vector3D(center.getX() + width, center.getY(), center.getZ());
-		Vector3D bottomleftfront = new Vector3D(center.getX(), center.getY(), center.getZ() + length);
-		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
+		Vector3D toprightfront = new Vector3D(location.getX() + width, location.getY() + height, location.getZ() + length);
+		Vector3D bottomleftback = new Vector3D(location.getX(), location.getY(), location.getZ());
 
 		bottomCorner = bottomleftback;
 		topCorner = toprightfront;
 
-
-		/*sides[0]= new Plane(bottomleftfront,toprightfront);//front
-		sides[1]= new Plane(bottomleftback,toprightback);//back
-		sides[2]= new Plane(bottomleftback,topleftfront);//left
-		sides[3]= new Plane(bottomrightback,toprightfront);//right*/
-		getTriangles()[0] = new Triangle(topleftfront, bottomrightfront, bottomleftfront, new Color(255, 0, 0)); //front bottom
-		getTriangles()[1] = new Triangle(toprightback, bottomleftback, bottomrightback, new Color(11, 255, 0)); //back bottom
-		getTriangles()[2] = new Triangle(topleftback,  bottomleftfront,bottomleftback, new Color(0, 70, 255)); //left bottom
-		getTriangles()[3] = new Triangle( bottomrightfront, toprightfront, bottomrightback, new Color(255, 180, 0)); //right bottom
-
-		getTriangles()[4] = new Triangle(topleftfront, toprightfront, bottomrightfront, new Color(255, 0, 0)); //front top
-		getTriangles()[5] = new Triangle( bottomleftback, toprightback,topleftback, new Color(11, 255, 0)); //back top
-		getTriangles()[6] = new Triangle(topleftback,  bottomleftfront,topleftfront, new Color(0, 70, 255)); // left top
-		getTriangles()[7] = new Triangle(toprightback,  bottomrightback, toprightfront,new Color(255, 180, 0)); // right top
-
-		getTriangles()[8] = new Triangle(topleftback,toprightback, toprightfront,  new Color(152, 5, 245)); // left top
-		getTriangles()[9] = new Triangle(toprightfront, topleftfront, topleftback, new Color(152, 5, 245)); // right top
-
-		getTriangles()[10] = new Triangle(bottomleftback, bottomrightfront,bottomrightback,  new Color(245, 5, 165)); // left top
-		getTriangles()[11] = new Triangle(bottomrightfront,  bottomleftback,bottomleftfront, new Color(245, 5, 165)); // right top
-		//sides[4]= new Plane(topleftback,toprightfront);//top
-		//sides[5]= new Plane(bottomleftfront,bottomrightfront);//bottom
+		resetTriangles();
 	}
 
 	public Cube(Vector3D center, double width, double height, double length, Material textures) {
@@ -68,6 +36,38 @@ public class Cube extends RenderableObject {
 	public Cube(Vector3D center, double width, double height, double length, Material[] textures) {
 		super(12);
 		init(center, width, height, length, textures);
+	}
+
+	public void resetTriangles() {
+		Vector3D center = bottomCorner;
+		double width = topCorner.getX() - bottomCorner.getX();
+		double height = topCorner.getY() - bottomCorner.getY();
+		double length = topCorner.getZ() - bottomCorner.getZ();
+		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
+		Vector3D toprightback = new Vector3D(center.getX() + width, center.getY() + height, center.getZ());
+		Vector3D topleftfront = new Vector3D(center.getX(), center.getY() + height, center.getZ() + length);
+		Vector3D topleftback = new Vector3D(center.getX(), center.getY() + height, center.getZ());
+
+		Vector3D bottomrightfront = new Vector3D(center.getX() + width, center.getY(), center.getZ() + length);
+		Vector3D bottomrightback = new Vector3D(center.getX() + width, center.getY(), center.getZ());
+		Vector3D bottomleftfront = new Vector3D(center.getX(), center.getY(), center.getZ() + length);
+		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
+
+		getTriangles()[0] = new Triangle(topleftfront, bottomrightfront, bottomleftfront, new Color(255, 0, 0)); //front bottom
+		getTriangles()[1] = new Triangle(toprightback, bottomleftback, bottomrightback, new Color(11, 255, 0)); //back bottom
+		getTriangles()[2] = new Triangle(topleftback, bottomleftfront, bottomleftback, new Color(0, 70, 255)); //left bottom
+		getTriangles()[3] = new Triangle(bottomrightfront, toprightfront, bottomrightback, new Color(255, 180, 0)); //right bottom
+
+		getTriangles()[4] = new Triangle(topleftfront, toprightfront, bottomrightfront, new Color(255, 0, 0)); //front top
+		getTriangles()[5] = new Triangle(bottomleftback, toprightback, topleftback, new Color(11, 255, 0)); //back top
+		getTriangles()[6] = new Triangle(topleftback, bottomleftfront, topleftfront, new Color(0, 70, 255)); // left top
+		getTriangles()[7] = new Triangle(toprightback, bottomrightback, toprightfront, new Color(255, 180, 0)); // right top
+
+		getTriangles()[8] = new Triangle(topleftback, toprightback, toprightfront, new Color(152, 5, 245)); // left top
+		getTriangles()[9] = new Triangle(toprightfront, topleftfront, topleftback, new Color(152, 5, 245)); // right top
+
+		getTriangles()[10] = new Triangle(bottomleftback, bottomrightfront, bottomrightback, new Color(245, 5, 165)); // left top
+		getTriangles()[11] = new Triangle(bottomrightfront, bottomleftback, bottomleftfront, new Color(245, 5, 165)); // right top
 	}
 
 	public double getYaw() {
@@ -86,6 +86,16 @@ public class Cube extends RenderableObject {
 	public void setPitch(double pitch) {
 		this.pitch = pitch;
 		updateTriangles();
+	}
+
+	@Override
+	public void teleport(Vector3D location) {
+		Vector3D dif = new Vector3D(topCorner);
+		dif.subtract(bottomCorner);
+		bottomCorner = location;
+		topCorner = new Vector3D(location);
+		topCorner.add(dif);
+		resetTriangles();
 	}
 
 
@@ -124,7 +134,7 @@ public class Cube extends RenderableObject {
 
 	@Override
 	public Triangle[] getTrianglesForRendering(World world) {
-			return getTriangles();
+		return getTriangles();
 		/*Plane[] planes = new Plane[2];
 		if(world.camera.getPersonLocation() .getX()< sides[2].getLocation().getX()){
 			planes[0] = sides[2];
@@ -188,7 +198,4 @@ public class Cube extends RenderableObject {
 		return new Vector3D((topCorner.getX() + bottomCorner.getX()) / 2, (topCorner.getY() + bottomCorner.getY()) / 2, (topCorner.getZ() + bottomCorner.getZ()) / 2);
 	}
 
-	public void setHiddenFaces(BlockFace f, boolean b) {
-		hiddenFaces[f.getIndex()] = b;
-	}
 }

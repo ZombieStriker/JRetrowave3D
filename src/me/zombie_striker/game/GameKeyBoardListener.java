@@ -1,10 +1,10 @@
 package me.zombie_striker.game;
 
+import me.zombie_striker.jretrowave3d.JRetroWave3D;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import static me.zombie_striker.game.Main.setMouse;
 
 public class GameKeyBoardListener implements KeyListener {
 	@Override
@@ -16,37 +16,37 @@ public class GameKeyBoardListener implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		boolean active = true;
 		if(e.getKeyCode()==KeyEvent.VK_W)
-			Main.game.forward = active;
+			((Game)JRetroWave3D.getGame()).forward = active;
 		if(e.getKeyCode()==KeyEvent.VK_S)
-			Main.game.backwards = active;
+			((Game)JRetroWave3D.getGame()).backwards = active;
 		if(e.getKeyCode()==KeyEvent.VK_A)
-			Main.game.left = active;
+			((Game)JRetroWave3D.getGame()).left = active;
 		if(e.getKeyCode()==KeyEvent.VK_D)
-			Main.game.right = active;
+			((Game)JRetroWave3D.getGame()).right = active;
 		if(e.getKeyCode()==KeyEvent.VK_J)
-			Main.game.j = active;
+			((Game)JRetroWave3D.getGame()).j = active;
 		if(e.getKeyCode()==KeyEvent.VK_L)
-			Main.game.l = active;
+			((Game)JRetroWave3D.getGame()).l = active;
 		if(e.getKeyCode()==KeyEvent.VK_I)
-			Main.game.i = active;
+			((Game)JRetroWave3D.getGame()).i = active;
 		if(e.getKeyCode()==KeyEvent.VK_K)
-			Main.game.k = active;
+			((Game)JRetroWave3D.getGame()).k = active;
 		if(e.getKeyCode()==KeyEvent.VK_SPACE)
-			Main.game.jump = active;
+			((Game)JRetroWave3D.getGame()).jump = active;
 		if(e.getKeyCode()==KeyEvent.VK_SHIFT)
-			Main.game.crouch = active;
+			((Game)JRetroWave3D.getGame()).crouch = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
-			Main.game.turn_left = active;
+			((Game)JRetroWave3D.getGame()).turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)
-			Main.game.turn_right = active;
+			((Game)JRetroWave3D.getGame()).turn_right = active;
 		if(e.getKeyCode()==KeyEvent.VK_UP)
-			Main.game.turn_up = active;
+			((Game)JRetroWave3D.getGame()).turn_up = active;
 		if(e.getKeyCode()==KeyEvent.VK_DOWN)
-			Main.game.turn_down = active;
+			((Game)JRetroWave3D.getGame()).turn_down = active;
 		if(e.getKeyCode()==KeyEvent.VK_ESCAPE) {
-			Main.game.escaped = !Main.game.escaped;
+			((Game)JRetroWave3D.getGame()).escaped = !((Game)JRetroWave3D.getGame()).escaped;
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			setMouse(Main.game.isEscaped()?null:toolkit.getImage("textures/transparent.png"),0,0);
+			JRetroWave3D.setMouse(((Game)JRetroWave3D.getGame()).isEscaped()?null:toolkit.getImage("textures/transparent.png"),0,0);
 		}
 
 	}
@@ -55,32 +55,32 @@ public class GameKeyBoardListener implements KeyListener {
 	public void keyReleased(KeyEvent e) {
 		boolean active = false;
 		if(e.getKeyCode()==KeyEvent.VK_W)
-			Main.game.forward = active;
+			((Game)JRetroWave3D.getGame()).forward = active;
 		if(e.getKeyCode()==KeyEvent.VK_S)
-			Main.game.backwards = active;
+			((Game)JRetroWave3D.getGame()).backwards = active;
 		if(e.getKeyCode()==KeyEvent.VK_A)
-			Main.game.left = active;
+			((Game)JRetroWave3D.getGame()).left = active;
 		if(e.getKeyCode()==KeyEvent.VK_D)
-			Main.game.right = active;
+			((Game)JRetroWave3D.getGame()).right = active;
 		if(e.getKeyCode()==KeyEvent.VK_J)
-			Main.game.j = active;
+			((Game)JRetroWave3D.getGame()).j = active;
 		if(e.getKeyCode()==KeyEvent.VK_L)
-			Main.game.l = active;
+			((Game)JRetroWave3D.getGame()).l = active;
 		if(e.getKeyCode()==KeyEvent.VK_I)
-			Main.game.i = active;
+			((Game)JRetroWave3D.getGame()).i = active;
 		if(e.getKeyCode()==KeyEvent.VK_K)
-			Main.game.k = active;
+			((Game)JRetroWave3D.getGame()).k = active;
 		if(e.getKeyCode()==KeyEvent.VK_SPACE)
-			Main.game.jump = active;
+			((Game)JRetroWave3D.getGame()).jump = active;
 		if(e.getKeyCode()==KeyEvent.VK_SHIFT)
-			Main.game.crouch = active;
+			((Game)JRetroWave3D.getGame()).crouch = active;
 		if(e.getKeyCode()==KeyEvent.VK_LEFT)
-			Main.game.turn_left = active;
+			((Game)JRetroWave3D.getGame()).turn_left = active;
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT)
-			Main.game.turn_right = active;
+			((Game)JRetroWave3D.getGame()).turn_right = active;
 		if(e.getKeyCode()==KeyEvent.VK_UP)
-			Main.game.turn_up = active;
+			((Game)JRetroWave3D.getGame()).turn_up = active;
 		if(e.getKeyCode()==KeyEvent.VK_DOWN)
-			Main.game.turn_down = active;
+			((Game)JRetroWave3D.getGame()).turn_down = active;
 	}
 }

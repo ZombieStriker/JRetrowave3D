@@ -12,6 +12,7 @@ public class PolyCylinder extends RenderableObject {
 	private Vector3D topCorner;
 	private double yaw = 0;
 	private double pitch = 0;
+	private int sides;
 	private Vector3D center;
 
 	public PolyCylinder(Vector3D center, int sides, double width, double height, double length) {
@@ -19,9 +20,17 @@ public class PolyCylinder extends RenderableObject {
 		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
 		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
 		this.center = center;
-
+this.sides= sides;
 		bottomCorner = bottomleftback;
 		topCorner = toprightfront;
+
+		resetTriangles();
+	}
+
+	private void resetTriangles() {
+		double width = topCorner.getX()-bottomCorner.getX();
+		double height = topCorner.getY()-bottomCorner.getY();
+		double length = topCorner.getZ()-bottomCorner.getZ();
 
 		double nextTheta = Math.PI * 2 / sides;
 		int index = 0;
@@ -89,4 +98,13 @@ public class PolyCylinder extends RenderableObject {
 		updateTriangles();
 	}
 
+	@Override
+	public void teleport(Vector3D location) {
+		Vector3D dif = new Vector3D(topCorner);
+		dif.subtract(bottomCorner);
+		bottomCorner = location;
+		topCorner = new Vector3D(location);
+		topCorner.add(dif);
+		updateTriangles();
+	}
 }

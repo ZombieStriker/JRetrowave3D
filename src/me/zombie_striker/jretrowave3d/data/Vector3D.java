@@ -106,4 +106,10 @@ public class Vector3D {
 		this.y /= length;
 		this.z /= length;
 	}
+
+	public void add(double x, double y, double z) {
+		this.x+=x;
+		this.y+=y;
+		this.z+=z;
+	}
 }

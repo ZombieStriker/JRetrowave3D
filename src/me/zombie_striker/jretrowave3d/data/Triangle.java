@@ -160,4 +160,24 @@ public class Triangle {
 			dis = temp;
 		return Math.sqrt(dis);
 	}
+
+	public Vector3D getCenter() {
+		double maxheight = Math.max(exactLocation[0].getY(),exactLocation[1].getY());
+		maxheight = Math.max(maxheight,exactLocation[2].getY());
+		double minheight = Math.min(exactLocation[0].getY(),exactLocation[1].getY());
+		minheight = Math.min(minheight,exactLocation[2].getY());
+
+		double maxwidth = Math.max(exactLocation[0].getX(),exactLocation[1].getX());
+		maxwidth = Math.max(maxwidth,exactLocation[2].getX());
+		double minwidth = Math.min(exactLocation[0].getX(),exactLocation[1].getX());
+		minwidth = Math.min(minwidth,exactLocation[2].getX());
+
+
+		double maxlength = Math.max(exactLocation[0].getZ(),exactLocation[1].getZ());
+		maxlength = Math.max(maxlength,exactLocation[2].getZ());
+		double minlength = Math.min(exactLocation[0].getZ(),exactLocation[1].getZ());
+		minlength = Math.min(minlength,exactLocation[2].getZ());
+
+		return new Vector3D((maxwidth+minwidth)/2,(maxheight+minheight)/2,(maxlength+minlength)/2);
+	}
 }
