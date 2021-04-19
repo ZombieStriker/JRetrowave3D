@@ -78,4 +78,11 @@ public class Camera {
 	public Vector3D getLocation() {
 		return personLocation;
 	}
+
+	public Vector3D getDirection() {
+		double z = (Math.cos(getYawRadians()) - Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
+		double y = Math.sin(getPitchRadians());
+		double x = (Math.cos(getYawRadians()) + Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
+		return new Vector3D(x,-y,z);
+	}
 }

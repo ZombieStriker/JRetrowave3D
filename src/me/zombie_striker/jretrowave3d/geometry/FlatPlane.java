@@ -1,6 +1,5 @@
 package me.zombie_striker.jretrowave3d.geometry;
 
-import me.zombie_striker.game.Main;
 import me.zombie_striker.jretrowave3d.JRetroWave3D;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.Triangle;
@@ -50,6 +49,11 @@ public class FlatPlane extends RenderableObject {
 
 	@Override
 	public Vector3D getCenter(World world) {
+		return center;
+	}
+
+	@Override
+	public Vector3D getLocation() {
 		return center;
 	}
 

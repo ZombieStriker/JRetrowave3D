@@ -48,4 +48,9 @@ public class SphereBoundingBox implements BoundingBox{
 		newCenter.add(distance,distance,distance);
 
 	}
+
+	@Override
+	public Vector3D getLocation() {
+		return new Vector3D(center.getX()-distance,center.getY()-distance,center.getZ()-distance);
+	}
 }

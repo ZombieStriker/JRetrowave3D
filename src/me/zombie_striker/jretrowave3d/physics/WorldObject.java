@@ -5,7 +5,7 @@ import me.zombie_striker.jretrowave3d.data.Vector3D;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
-public abstract class StaticObject {
+public abstract class WorldObject {
 
 	private BoundingBox box;
 	private RenderableObject render;
@@ -14,7 +14,7 @@ public abstract class StaticObject {
 
 	private World world;
 
-	public StaticObject(World world,Vector3D location, BoundingBox box, RenderableObject renderableObject){
+	public WorldObject(World world, Vector3D location, BoundingBox box, RenderableObject renderableObject){
 		this.box = box;
 		this.render = renderableObject;
 		this.world = world;

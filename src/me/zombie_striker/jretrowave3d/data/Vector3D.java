@@ -18,6 +18,17 @@ public class Vector3D {
 		this.z = vector3D.getZ();
 	}
 
+	public static boolean within(Vector3D mincorner, Vector3D maxCorner, Vector3D location) {
+		if (mincorner.getX() <= location.getX() && maxCorner.getX() >= location.getX()) {
+			if (mincorner.getY() <= location.getY() && maxCorner.getY() >= location.getY()) {
+				if (mincorner.getZ() <= location.getZ() && maxCorner.getZ() >= location.getZ()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 	public double getX() {
 		return x;
@@ -108,8 +119,8 @@ public class Vector3D {
 	}
 
 	public void add(double x, double y, double z) {
-		this.x+=x;
-		this.y+=y;
-		this.z+=z;
+		this.x += x;
+		this.y += y;
+		this.z += z;
 	}
 }

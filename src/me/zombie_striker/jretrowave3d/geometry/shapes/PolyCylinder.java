@@ -1,8 +1,9 @@
-package me.zombie_striker.jretrowave3d.geometry;
+package me.zombie_striker.jretrowave3d.geometry.shapes;
 
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.Triangle;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 
 import java.awt.*;
 
@@ -20,7 +21,7 @@ public class PolyCylinder extends RenderableObject {
 		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
 		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
 		this.center = center;
-this.sides= sides;
+		this.sides = sides;
 		bottomCorner = bottomleftback;
 		topCorner = toprightfront;
 
@@ -28,9 +29,9 @@ this.sides= sides;
 	}
 
 	private void resetTriangles() {
-		double width = topCorner.getX()-bottomCorner.getX();
-		double height = topCorner.getY()-bottomCorner.getY();
-		double length = topCorner.getZ()-bottomCorner.getZ();
+		double width = topCorner.getX() - bottomCorner.getX();
+		double height = topCorner.getY() - bottomCorner.getY();
+		double length = topCorner.getZ() - bottomCorner.getZ();
 
 		double nextTheta = Math.PI * 2 / sides;
 		int index = 0;
@@ -46,18 +47,23 @@ this.sides= sides;
 			getTriangles()[index] = t;
 			index++;
 		}
-		for(double theta = 0; theta < Math.PI*2 + 0; theta+=nextTheta){
-			double x = (Math.cos(theta)*width)-(Math.sin(theta)*length);
-			double z = (Math.cos(theta)*length)+(Math.sin(theta)*width);
-			double x2 = (Math.cos(theta+nextTheta)*width)-(Math.sin(theta+nextTheta)*length);
-			double z2 = (Math.cos(theta+nextTheta)*length)+(Math.sin(theta+nextTheta)*width);
-			Vector3D point = new Vector3D(center.getX()+x, center.getY()+height, center.getZ()+z);
-			Vector3D point2 = new Vector3D(center.getX()+x, center.getY(), center.getZ()+z);
-			Vector3D point3 = new Vector3D(center.getX()+x2, center.getY()+height, center.getZ()+z2);
-			Triangle t = new Triangle(point2,point3,point, new Color(0,255,255));
+		for (double theta = 0; theta < Math.PI * 2 + 0; theta += nextTheta) {
+			double x = (Math.cos(theta) * width) - (Math.sin(theta) * length);
+			double z = (Math.cos(theta) * length) + (Math.sin(theta) * width);
+			double x2 = (Math.cos(theta + nextTheta) * width) - (Math.sin(theta + nextTheta) * length);
+			double z2 = (Math.cos(theta + nextTheta) * length) + (Math.sin(theta + nextTheta) * width);
+			Vector3D point = new Vector3D(center.getX() + x, center.getY() + height, center.getZ() + z);
+			Vector3D point2 = new Vector3D(center.getX() + x, center.getY(), center.getZ() + z);
+			Vector3D point3 = new Vector3D(center.getX() + x2, center.getY() + height, center.getZ() + z2);
+			Triangle t = new Triangle(point3, point, point2, new Color(0, 255, 255));
 			getTriangles()[index] = t;
 			index++;
 		}
+	}
+
+	@Override
+	public Vector3D getLocation() {
+		return bottomCorner;
 	}
 
 	@Override

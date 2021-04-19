@@ -1,11 +1,9 @@
 package me.zombie_striker.jretrowave3d;
 
-import me.zombie_striker.game.Game;
-import me.zombie_striker.game.GameKeyBoardListener;
-import me.zombie_striker.game.GameMouseListener;
-import me.zombie_striker.game.Main;
-
 import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 public class JRetroWave3D {
@@ -21,11 +19,6 @@ public class JRetroWave3D {
 
 		window = new Window();
 		window.init();
-
-
-		game = new Game();
-		game.init();
-
 	}
 
 	public static void start(){
@@ -37,6 +30,7 @@ public class JRetroWave3D {
 
 			BufferedImage screen = new BufferedImage(getWindow().getWidth(), getWindow().getHeight(), BufferedImage.TYPE_INT_ARGB);
 			game.getWorld().render(screen);
+			game.render(screen);
 			getWindow().getDisplay().setDisplay(screen);
 
 			try {
@@ -75,15 +69,19 @@ public class JRetroWave3D {
 		}
 	}
 
-	public static void addKeyListener(GameKeyBoardListener gameKeyBoardListener) {
+	public static void addKeyListener(KeyListener gameKeyBoardListener) {
 		getWindow().addKeyListener(gameKeyBoardListener);
 	}
 
-	public static void addMouseListener(GameMouseListener mouseListener) {
+	public static void addMouseListener(MouseListener mouseListener) {
 		getWindow().addMouseListener(mouseListener);
 	}
 
-	public static void addMouseMotionListener(GameMouseListener mouseListener) {
+	public static void addMouseMotionListener(MouseMotionListener mouseListener) {
 		getWindow().addMouseMotionListener(mouseListener);
+	}
+
+	public static void setGameEngine(GameEngine game) {
+		JRetroWave3D.game = game;
 	}
 }

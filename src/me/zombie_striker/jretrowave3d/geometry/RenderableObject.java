@@ -1,6 +1,5 @@
 package me.zombie_striker.jretrowave3d.geometry;
 
-import me.zombie_striker.game.Main;
 import me.zombie_striker.jretrowave3d.JRetroWave3D;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
@@ -13,6 +12,8 @@ public abstract class RenderableObject{
 	public RenderableObject(int triangles){
 		sides=new Triangle[triangles];
 	}
+
+	public abstract Vector3D getLocation();
 
 	public abstract Triangle[] getTrianglesForRendering(World world);
 	public abstract Triangle[] getAllTriangles(World world);
@@ -29,6 +30,10 @@ public abstract class RenderableObject{
 
 	public Triangle[] getTriangles(){
 		return sides;
+	}
+
+	public void setTriangles(Triangle[] array){
+		this.sides = array;
 	}
 
 	public void updateTriangles() {

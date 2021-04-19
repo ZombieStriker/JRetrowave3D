@@ -8,4 +8,5 @@ public interface BoundingBox {
 	boolean collides(BoundingBox box);
 	boolean collides(BoundingBox box,Vector3D point, Vector3D lastLocation);
 	void teleport(Vector3D location);
+	Vector3D getLocation();
 }

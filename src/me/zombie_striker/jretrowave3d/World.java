@@ -28,7 +28,7 @@ public class World {
 
 	public Camera camera;
 
-	public World(int x, int y) {
+	public World(double x, double y) {
 		camera = new Camera(new Vector3D(x, 1, y));
 	}
 

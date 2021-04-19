@@ -180,43 +180,6 @@ public class Draw {
 
 
 		if (material != null) {
-
-			TextureStitchingAlgo tse = TextureStitchingAlgo.DEFAULT_BOTTOM;
-			int p1index = tse.getIndex1();
-			int p2index = tse.getIndex2();
-			int p3index = tse.getIndex3();
-			double slope = (((double) (y[p2index] - y[p1index]) / (x[p2index] - x[p1index])));
-			double slope2 = 0;//(((double) (y[p2index] - y[p3index]) / (x[p2index] - x[p3index])));
-			double slope3 = (((double) (y[p3index] - y[p1index]) / (x[p3index] - x[p1index])));
-			if (Double.isInfinite(slope)) {
-				tse = TextureStitchingAlgo.DEFAULT;
-				p1index = tse.getIndex1();
-				p2index = tse.getIndex2();
-				p3index = tse.getIndex3();
-				slope = (((double) (y[p2index] - y[p1index]) / (x[p2index] - x[p1index])));
-				slope2 = 0;///(((double) (y[p2index] - y[p3index]) / (x[p2index] - x[p3index])));
-				slope3 = (((double) (y[p3index] - y[p1index]) / (x[p3index] - x[p1index])));
-			}
-			BufferedImage resize = null;
-			try {
-				resize = resize(material.getMaterial(), bix - bixmin, biy - biymin, slope, slope2, slope3);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			g.drawImage(resize, 0, 0, null);
-			for (int x1 = bixmin; x1 < bix; x1++) {
-				for (int y1 = biymin; y1 < biy; y1++) {
-					if (p.contains(x1, y1)) {
-						int y2 = (int) ((y1 - biymin));//* (slope <= 0 ? slope*(bixmin-x1) : slope*(x1-bixmin)));
-						if (x1 >= 0 && y2 >= 0 && x1 - bixmin < resize.getWidth() && y2 < resize.getHeight()) {
-							int rgb = resize.getRGB(x1 - bixmin, y2);
-							if (x1 >= 0 && y1 >= 0 && x1 < bi.getWidth() && y1 < bi.getHeight()) {
-								bi.setRGB(x1, y1, rgb);
-							}
-						}
-					}
-				}
-			}
 		} else {
 			g.fillPolygon(p);
 		}
@@ -372,6 +335,27 @@ public class Draw {
 		double y2 = ((((-ydifB / (zdifB)))));
 		double y3 = ((((-ydifC / (zdifC)))));
 
+		/*if(x1 < -bi.getWidth()/2){
+			x1=-bi.getWidth()/2;
+		}
+		if(x2 < -bi.getWidth()/2){
+			x2=-bi.getWidth()/2;
+		}
+		if(x3 < -bi.getWidth()/2){
+			x3=-bi.getWidth()/2;
+		}
+
+		if(y1 < -bi.getHeight()/2){
+			y1=-bi.getHeight()/2;
+		}
+		if(y2 < -bi.getHeight()/2){
+			y2=-bi.getHeight()/2;
+		}
+		if(y3 < -bi.getHeight()/2){
+			y3=-bi.getHeight()/2;
+		}*/
+
+		//TODO: Check if this is working
 		if (zdifA < 0) {
 			//y1=y1;
 			if (ydifA < 0) {
@@ -441,13 +425,31 @@ public class Draw {
 		point3.multiply(bi.getHeight() / 2);
 
 		if (point1.isInfinite()) {
-			return;
+			if(Double.isInfinite(point1.getX())){
+				point1.setX(bi.getWidth());
+			}
+			if(Double.isInfinite(point1.getY())){
+				point1.setX(bi.getHeight());
+			}
+			System.out.println("p1 "+point1.getX()+" "+point1.getY());
 		}
 		if (point2.isInfinite()) {
-			return;
+			if(Double.isInfinite(point2.getX())){
+				point2.setX(bi.getWidth());
+			}
+			if(Double.isInfinite(point2.getY())){
+				point2.setX(bi.getHeight());
+			}
+			System.out.println("p2 "+point2.getX()+" "+point2.getY());
 		}
 		if (point3.isInfinite()) {
-			return;
+			if(Double.isInfinite(point3.getX())){
+				point3.setX(bi.getWidth());
+			}
+			if(Double.isInfinite(point3.getY())){
+				point3.setX(bi.getHeight());
+			}
+			System.out.println("p3 "+point3.getX()+" "+point3.getY());
 		}
 
 

@@ -82,9 +82,14 @@ public class Floor extends RenderableObject {
 		topCorner = bottomrightfront;
 
 		getTriangles()[0] = new Triangle(bottomleftback,bottomrightback, bottomrightfront,  new Color(245, 5, 165)); // left top
-		getTriangles()[1] = new Triangle(bottomrightfront, bottomleftfront, bottomleftback, new Color(245, 5, 165)); // right top
+		getTriangles()[1] = new Triangle(bottomleftfront,bottomleftback,bottomrightfront,   new Color(245, 5, 165)); // right top
 		//sides[4]= new Plane(topleftback,toprightfront);//top
 		//sides[5]= new Plane(bottomleftfront,bottomrightfront);//bottom
+	}
+
+	@Override
+	public Vector3D getLocation() {
+		return bottomCorner;
 	}
 
 	@Override

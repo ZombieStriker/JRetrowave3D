@@ -55,23 +55,33 @@ public class LightManager {
 		double theta3 = Math.asin(normal.getY());
 		double theta4 = Math.asin(direction.getY());
 
-		double theta = Math.PI/2;///*theta2+*/theta1;//+(Math.PI/4);
+		double theta = (Math.PI/2) ;///*theta2+*/theta1;//+(Math.PI/4);
 
 
 
 
-		if(Math.abs(direction.getZ()) > Math.abs(direction.getX())){
-			dot = (Math.cos(theta) * direction.getX()) + (Math.sin(theta) * direction.getZ());
-			dot *= (Math.cos(theta) * normal.getX()) - (Math.sin(theta) * normal.getZ());
-			//dot *= /*(Math.cos(theta4) * direction.getZ())*/ - (Math.sin(theta3) * direction.getY());
-			//dot *= (Math.cos(theta4) * normal.getY()) /*+ (Math.sin(theta3) * normal.getZ())*/;
+		if(Math.abs(normal.getY()) > 0){
+			if(Math.abs(direction.getZ()) > Math.abs(direction.getX())) {
+				dot = (Math.cos(theta) * direction.getX()) + (Math.sin(theta) * direction.getY());
+				dot *= (Math.cos(theta) * normal.getX()) - (Math.sin(theta) * normal.getY());
+			}else{
+				dot = (Math.cos(theta) * direction.getZ()) + (Math.sin(theta) * direction.getY());
+				dot *= (Math.cos(theta) * normal.getZ()) - (Math.sin(theta) * normal.getY());
+			}
 		}else {
-			dot = (Math.cos(theta) * direction.getZ()) + (Math.sin(theta) * direction.getX());
-			dot *= (Math.cos(theta) * normal.getZ()) - (Math.sin(theta) * normal.getX());
-			//dot *= (Math.cos(theta) * direction.getX()) - (Math.sin(theta) * direction.getY());
-			//dot *= (Math.cos(theta) * normal.getY()) + (Math.sin(theta) * normal.getX());
-		}
+			if (Math.abs(direction.getZ()) > Math.abs(direction.getX())) {
+				dot = (Math.cos(theta) * direction.getX()) + (Math.sin(theta) * direction.getZ());
+				dot *= (Math.cos(theta) * normal.getX()) - (Math.sin(theta) * normal.getZ());
+				//dot *= /*(Math.cos(theta4) * direction.getZ())*/ + (Math.sin(theta3) * direction.getY());
+				//dot *= (Math.cos(theta4) * normal.getY()) /*+ (Math.sin(theta3) * normal.getZ())*/;
 
+			} else {
+				dot = (Math.cos(theta) * direction.getZ()) + (Math.sin(theta) * direction.getX());
+				dot *= (Math.cos(theta) * normal.getZ()) - (Math.sin(theta) * normal.getX());
+				//dot *= (Math.cos(theta) * direction.getX()) - (Math.sin(theta) * direction.getY());
+				//dot *= (Math.cos(theta) * normal.getY()) + (Math.sin(theta) * normal.getX());
+			}
+		}
 		dot=dot*(closestLight.getIntensity())/Math.sqrt(closestdistance);
 		//System.out.println(theta);
 		//System.out.println(dot+"       ||  "+theta + "        "+ direction.getX()+"      "+ direction.getZ());

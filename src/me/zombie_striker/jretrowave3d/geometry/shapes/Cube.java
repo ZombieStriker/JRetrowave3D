@@ -1,9 +1,10 @@
-package me.zombie_striker.jretrowave3d.geometry;
+package me.zombie_striker.jretrowave3d.geometry.shapes;
 
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.Material;
 import me.zombie_striker.jretrowave3d.data.Triangle;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -66,8 +67,8 @@ public class Cube extends RenderableObject {
 		getTriangles()[8] = new Triangle(topleftback, toprightback, toprightfront, new Color(152, 5, 245)); // left top
 		getTriangles()[9] = new Triangle(toprightfront, topleftfront, topleftback, new Color(152, 5, 245)); // right top
 
-		getTriangles()[10] = new Triangle(bottomleftback, bottomrightfront, bottomrightback, new Color(245, 5, 165)); // left top
-		getTriangles()[11] = new Triangle(bottomrightfront, bottomleftback, bottomleftfront, new Color(245, 5, 165)); // right top
+		getTriangles()[10] = new Triangle(bottomleftback, bottomrightfront, bottomrightback, new Color(245, 5, 165)); // left bottom
+		getTriangles()[11] = new Triangle(bottomrightfront, bottomleftback, bottomleftfront, new Color(245, 5, 165)); // right bottom
 	}
 
 	public double getYaw() {
@@ -130,6 +131,11 @@ public class Cube extends RenderableObject {
 
 		//sides[4]= new Plane(topleftback,toprightfront);//top
 		//sides[5]= new Plane(bottomleftfront,bottomrightfront);//bottom
+	}
+
+	@Override
+	public Vector3D getLocation() {
+		return bottomCorner;
 	}
 
 	@Override

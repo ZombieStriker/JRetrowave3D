@@ -83,4 +83,9 @@ public class BoxBoundingBox implements BoundingBox {
 		maxCorner = new Vector3D(location);
 		maxCorner.add(dif);
 	}
+
+	@Override
+	public Vector3D getLocation() {
+		return mincorder;
+	}
 }
