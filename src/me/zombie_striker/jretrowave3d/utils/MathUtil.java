@@ -4,11 +4,11 @@ import me.zombie_striker.jretrowave3d.data.Vector3D;
 
 public class MathUtil {
 
-	public static double distance(Vector3D p1, Vector3D p2) {
-		return Math.sqrt(distanceSquared(p1, p2));
+	public static float distance(Vector3D p1, Vector3D p2) {
+		return (float) Math.sqrt(distanceSquared(p1, p2));
 	}
 
-	public static double distanceSquared(Vector3D p1, Vector3D p2) {
+	public static float distanceSquared(Vector3D p1, Vector3D p2) {
 		int dif = 0;
 
 		int x1 = (int) (p1.getX() - p2.getX());
@@ -81,5 +81,17 @@ public class MathUtil {
 			}
 		}
 		return min;
+	}
+
+	public static int getMultipleClosestTo(int number, int multiple){
+		return ((number/multiple)+1)*multiple;
+	}
+
+	public static int getDevisableBy(int resultLength, int i) {
+		for(int j = i; i >= 2;j--){
+			if(resultLength%j==0)
+				return j;
+		}
+		return 1;
 	}
 }

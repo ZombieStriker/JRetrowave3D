@@ -73,17 +73,14 @@ public class Camera {
 		this.fov = f;
 	}
 
-	//public Location getApertureLocation() {
-	//	return apatureLocation;
-	//}
 	public Vector3D getLocation() {
 		return personLocation;
 	}
 
 	public Vector3D getDirection() {
-		double z = (Math.cos(getYawRadians()) /*- Math.sin(getYawRadians())*/)*Math.cos(getPitchRadians());
-		double y = Math.sin(getPitchRadians());
-		double x = (/*Math.cos(getYawRadians())*/ - Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
+		float z = (float) ((Math.cos(getYawRadians()) /*- Math.sin(getYawRadians())*/)*Math.cos(getPitchRadians()));
+		float y = (float) Math.sin(getPitchRadians());
+		float x = (float) ((/*Math.cos(getYawRadians())*/ - Math.sin(getYawRadians()))*Math.cos(getPitchRadians()));
 		return new Vector3D(x,-y,z);
 	}
 }

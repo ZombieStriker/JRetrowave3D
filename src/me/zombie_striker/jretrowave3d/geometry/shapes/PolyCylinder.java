@@ -11,12 +11,12 @@ public class PolyCylinder extends RenderableObject {
 
 	private Vector3D bottomCorner;
 	private Vector3D topCorner;
-	private double yaw = 0;
-	private double pitch = 0;
+	private float yaw = 0;
+	private float pitch = 0;
 	private int sides;
 	private Vector3D center;
 
-	public PolyCylinder(Vector3D center, int sides, double width, double height, double length) {
+	public PolyCylinder(Vector3D center, int sides, float width, float height, float length) {
 		super(sides * 2);
 		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
 		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
@@ -29,17 +29,17 @@ public class PolyCylinder extends RenderableObject {
 	}
 
 	private void resetTriangles() {
-		double width = topCorner.getX() - bottomCorner.getX();
-		double height = topCorner.getY() - bottomCorner.getY();
-		double length = topCorner.getZ() - bottomCorner.getZ();
+		float width = topCorner.getX() - bottomCorner.getX();
+		float height = topCorner.getY() - bottomCorner.getY();
+		float length = topCorner.getZ() - bottomCorner.getZ();
 
 		double nextTheta = Math.PI * 2 / sides;
 		int index = 0;
-		for (double theta = 0; theta < Math.PI * 2 + 0; theta += nextTheta) {
-			double x = Math.cos(theta) * width - (Math.sin(theta) * length);
-			double z = Math.cos(theta) * length + (Math.sin(theta) * width);
-			double x2 = Math.cos(theta + nextTheta) * width - (Math.sin(theta + nextTheta) * length);
-			double z2 = Math.cos(theta + nextTheta) * length + (Math.sin(theta + nextTheta) * width);
+		for (float theta = 0; theta < Math.PI * 2 + 0; theta += nextTheta) {
+			float x = (float) (Math.cos(theta) * width - (Math.sin(theta) * length));
+			float z = (float) (Math.cos(theta) * length + (Math.sin(theta) * width));
+			float x2 = (float) (Math.cos(theta + nextTheta) * width - (Math.sin(theta + nextTheta) * length));
+			float z2 = (float) (Math.cos(theta + nextTheta) * length + (Math.sin(theta + nextTheta) * width));
 			Vector3D point = new Vector3D(center.getX() + x, center.getY(), center.getZ() + z);
 			Vector3D point2 = new Vector3D(center.getX() + x2, center.getY(), center.getZ() + z2);
 			Vector3D point3 = new Vector3D(center.getX() + x2, center.getY() + height, center.getZ() + z2);
@@ -48,10 +48,10 @@ public class PolyCylinder extends RenderableObject {
 			index++;
 		}
 		for (double theta = 0; theta < Math.PI * 2 + 0; theta += nextTheta) {
-			double x = (Math.cos(theta) * width) - (Math.sin(theta) * length);
-			double z = (Math.cos(theta) * length) + (Math.sin(theta) * width);
-			double x2 = (Math.cos(theta + nextTheta) * width) - (Math.sin(theta + nextTheta) * length);
-			double z2 = (Math.cos(theta + nextTheta) * length) + (Math.sin(theta + nextTheta) * width);
+			float x = (float) ((Math.cos(theta) * width) - (Math.sin(theta) * length));
+			float z = (float) ((Math.cos(theta) * length) + (Math.sin(theta) * width));
+			float x2 = (float) ((Math.cos(theta + nextTheta) * width) - (Math.sin(theta + nextTheta) * length));
+			float z2 = (float) ((Math.cos(theta + nextTheta) * length) + (Math.sin(theta + nextTheta) * width));
 			Vector3D point = new Vector3D(center.getX() + x, center.getY() + height, center.getZ() + z);
 			Vector3D point2 = new Vector3D(center.getX() + x, center.getY(), center.getZ() + z);
 			Vector3D point3 = new Vector3D(center.getX() + x2, center.getY() + height, center.getZ() + z2);
@@ -77,7 +77,7 @@ public class PolyCylinder extends RenderableObject {
 	}
 
 	@Override
-	public boolean isInside(Vector3D location, double size) {
+	public boolean isInside(Vector3D location, float size) {
 		return false;
 	}
 
@@ -86,22 +86,22 @@ public class PolyCylinder extends RenderableObject {
 		return center;
 	}
 
-	public double getYaw() {
+	public float getYaw() {
 		return yaw;
 	}
 
-	public void setYaw(double yaw) {
+	public void setYaw(float yaw) {
 		this.yaw = yaw;
-		updateTriangles();
+		setUpdateTrianglesWithGPU();
 	}
 
-	public double getPitch() {
+	public float getPitch() {
 		return pitch;
 	}
 
-	public void setPitch(double pitch) {
+	public void setPitch(float pitch) {
 		this.pitch = pitch;
-		updateTriangles();
+		setUpdateTrianglesWithGPU();
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class PolyCylinder extends RenderableObject {
 		bottomCorner = location;
 		topCorner = new Vector3D(location);
 		topCorner.add(dif);
-		updateTriangles();
+		setUpdateTrianglesWithGPU();
 	}
 
 	public RenderableObject clone(){
@@ -123,14 +123,14 @@ public class PolyCylinder extends RenderableObject {
 	}
 
 	@Override
-	public RenderableObject setSize(double width, double height, double length) {
+	public RenderableObject setSize(float width, float height, float length) {
 		resize(topCorner, new Vector3D(bottomCorner).add(width,height,length));
 		topCorner = new Vector3D(bottomCorner).add(width,height,length);
 		return this;
 	}
 
 	@Override
-	public RenderableObject setSize(double size) {
+	public RenderableObject setSize(float size) {
 		return null;
 	}
 }

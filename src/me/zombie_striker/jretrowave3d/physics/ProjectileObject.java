@@ -40,6 +40,6 @@ public class ProjectileObject extends MovableObject{
 				}
 			}
 		}
-		getRender().updateTriangles();
+		getRender().setUpdateTrianglesWithGPU();
 	}
 }

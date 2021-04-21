@@ -8,8 +8,13 @@ import java.util.List;
 public class TickManager {
 
 	private static List<TickableObject> ticks = new ArrayList<>();
+	private static List<TickableObject> delayedTicks = new ArrayList<>();
 
 	public static void tick(){
+		for(TickableObject tick : new ArrayList<>(delayedTicks)){
+			tick.tick();
+		}
+		delayedTicks.clear();
 		for(TickableObject tick : new ArrayList<>(ticks)){
 			tick.tick();
 		}
@@ -19,4 +24,8 @@ public class TickManager {
 		ticks.add(tickableObject);
 	}
 	public static void removeTickableObject(TickableObject tickableObject){ticks.remove(tickableObject);}
+
+	public static void runNextTick(TickableObject tickableObject) {
+		delayedTicks.add(tickableObject);
+	}
 }

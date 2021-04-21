@@ -17,7 +17,7 @@ public class World {
 	private Set<Light> lights = new HashSet<>();
 	private Set<BoundingBox> boundingBoxes = new HashSet<>();
 
-	public World(double x, double y, int z) {
+	public World(float x, float y, float z) {
 		camera = new Camera(new Vector3D(x, y, z));
 	}
 
@@ -33,7 +33,7 @@ public class World {
 		return renderCollidesWith(location, 0);
 	}
 
-	public RenderableObject renderCollidesWith(Vector3D location, double size) {
+	public RenderableObject renderCollidesWith(Vector3D location, float size) {
 		for (RenderableObject r : toRender) {
 			if (r.isInside(location, size))
 				return r;
@@ -44,8 +44,8 @@ public class World {
 	public void render(ScreenWrapper renderto) {
 		ScreenWrapper bi = renderto;
 
-		HashMap<Triangle, Double> triangleMap = new HashMap<>();
-		HashMap<Triangle, Double> triangleHeightDifMap = new HashMap<>();
+		HashMap<Triangle, Float> triangleMap = new HashMap<>();
+		HashMap<Triangle, Float> triangleHeightDifMap = new HashMap<>();
 		List<Triangle> shouldDrawRelToScreen = new ArrayList<>();
 		for (RenderableObject renderableObject : new ArrayList<>(toRender)) {
 			for (Triangle t : renderableObject.getTrianglesForRendering(this)) {
@@ -85,10 +85,10 @@ public class World {
 				}
 			}
 		}
-		List<Map.Entry<Triangle, Double>> list = new LinkedList<Map.Entry<Triangle, Double>>(triangleMap.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<Triangle, Double>>() {
+		List<Map.Entry<Triangle, Float>> list = new LinkedList<Map.Entry<Triangle, Float>>(triangleMap.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<Triangle, Float>>() {
 			@Override
-			public int compare(Map.Entry<Triangle, Double> o1, Map.Entry<Triangle, Double> o2) {
+			public int compare(Map.Entry<Triangle, Float> o1, Map.Entry<Triangle, Float> o2) {
 				if (false) {
 					return o1.getValue().compareTo(o2.getValue());
 				} else {
@@ -101,8 +101,8 @@ public class World {
 				}
 			}
 		});
-		Map<Triangle, Double> sortedMap = new LinkedHashMap<>();
-		for (Map.Entry<Triangle, Double> entry : list) {
+		Map<Triangle, Float> sortedMap = new LinkedHashMap<>();
+		for (Map.Entry<Triangle, Float> entry : list) {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 

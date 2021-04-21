@@ -5,9 +5,9 @@ import me.zombie_striker.jretrowave3d.data.Vector3D;
 public class SphereBoundingBox implements BoundingBox{
 
 	private Vector3D center;
-	private double distance;
+	private float distance;
 
-	public SphereBoundingBox(Vector3D center, double distance){
+	public SphereBoundingBox(Vector3D center, float distance){
 		this.center = center;
 		this.distance = distance;
 	}
@@ -38,7 +38,7 @@ public class SphereBoundingBox implements BoundingBox{
 	public Vector3D getCenter(){
 		return center;
 	}
-	public double getRadius(){
+	public float getRadius(){
 		return distance;
 	}
 

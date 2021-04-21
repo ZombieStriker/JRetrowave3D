@@ -2,11 +2,11 @@ package me.zombie_striker.jretrowave3d.data;
 
 public class Vector3D {
 
-	private double x;
-	private double y;
-	private double z;
+	private float x;
+	private float y;
+	private float z;
 
-	public Vector3D(double x, double y, double z) {
+	public Vector3D(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -34,27 +34,27 @@ public class Vector3D {
 		return new Vector3D(this);
 	}
 
-	public double getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setX(double x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public double getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setY(double y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
-	public double getZ() {
+	public float getZ() {
 		return z;
 	}
 
-	public void setZ(double z) {
+	public void setZ(float z) {
 		this.z = z;
 	}
 
@@ -69,11 +69,11 @@ public class Vector3D {
 	public void rotateYaw(double yawRadians, Vector3D center) {
 
 
-		double x1 = getX() - center.getX();
-		double z1 = getZ() - center.getZ();
+		float x1 = getX() - center.getX();
+		float z1 = getZ() - center.getZ();
 
-		double cos = Math.cos(yawRadians);
-		double sin = Math.sin(yawRadians);
+		float cos = (float) Math.cos(yawRadians);
+		float sin = (float) Math.sin(yawRadians);
 
 		setX(center.getX() + ((x1 * cos) - (z1 * sin)));
 		setZ(center.getZ() + ((z1 * cos) + (x1 * sin)));
@@ -82,11 +82,11 @@ public class Vector3D {
 	public void rotatePitch(double pitchRadians, Vector3D center) {
 
 
-		double y1 = getY() - center.getY();
-		double z1 = getZ() - center.getZ();
+		float y1 = getY() - center.getY();
+		float z1 = getZ() - center.getZ();
 
-		double cos = Math.cos(pitchRadians);
-		double sin = Math.sin(pitchRadians);
+		float cos = (float) Math.cos(pitchRadians);
+		float sin = (float) Math.sin(pitchRadians);
 
 		setY(center.getY() + ((y1 * cos) + (z1 * sin)));
 		setZ(center.getZ() + ((z1 * cos) - (y1 * sin)));

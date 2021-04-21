@@ -60,7 +60,7 @@ public class Triangle {
 		this.material = texture;
 	}
 
-	public void subtract(double x, double y, double z) {
+	public void subtract(float x, float y, float z) {
 		for (Vector3D v3 : triangle) {
 			v3.setX(v3.getX() - x);
 			v3.setY(v3.getY() - y);
@@ -74,7 +74,7 @@ public class Triangle {
 		LightManager.setTriangleToRelight(this);
 	}
 
-	public void add(double x, double y, double z) {
+	public void add(float x, float y, float z) {
 		for (Vector3D v3 : triangle) {
 			v3.setX(v3.getX() + x);
 			v3.setY(v3.getY() + y);
@@ -113,9 +113,9 @@ public class Triangle {
 
 		}
 
-		double normalx = (u.getY() * v.getZ()) - (u.getZ() * v.getY());
-		double normaly = (u.getZ() * v.getX()) - (u.getX() * v.getZ());
-		double normalz = (u.getX() * v.getY()) - (u.getY() * v.getX());
+		float normalx = (u.getY() * v.getZ()) - (u.getZ() * v.getY());
+		float normaly = (u.getZ() * v.getX()) - (u.getX() * v.getZ());
+		float normalz = (u.getX() * v.getY()) - (u.getY() * v.getX());
 
 		Vector3D normal = new Vector3D(normalx, normaly, normalz);
 		if(getTrueVertexes){
@@ -173,33 +173,33 @@ public class Triangle {
 		return Math.sqrt(dis);
 	}
 
-	public Double getClosestDistance(World world) {
-		double dis = MathUtil.distanceSquared(triangle[0], world.camera.getLocation());
-		double temp = MathUtil.distanceSquared(triangle[1], world.camera.getLocation());
+	public Float getClosestDistance(World world) {
+		float dis = MathUtil.distanceSquared(triangle[0], world.camera.getLocation());
+		float temp = MathUtil.distanceSquared(triangle[1], world.camera.getLocation());
 		if (temp < dis)
 			dis = temp;
 		temp = MathUtil.distanceSquared(triangle[2], world.camera.getLocation());
 		if (temp < dis)
 			dis = temp;
-		return Math.sqrt(dis);
+		return (float)Math.sqrt(dis);
 	}
 
 	public Vector3D getCenter() {
 		//TODO: Swapped from exact location
-		double maxheight = Math.max(triangle_true[0].getY(),triangle_true[1].getY());
+		float maxheight = Math.max(triangle_true[0].getY(),triangle_true[1].getY());
 		maxheight = Math.max(maxheight,triangle_true[2].getY());
-		double minheight = Math.min(triangle_true[0].getY(),triangle_true[1].getY());
+		float minheight = Math.min(triangle_true[0].getY(),triangle_true[1].getY());
 		minheight = Math.min(minheight,triangle_true[2].getY());
 
-		double maxwidth = Math.max(triangle_true[0].getX(),triangle_true[1].getX());
+		float maxwidth = Math.max(triangle_true[0].getX(),triangle_true[1].getX());
 		maxwidth = Math.max(maxwidth,triangle_true[2].getX());
-		double minwidth = Math.min(triangle_true[0].getX(),triangle_true[1].getX());
+		float minwidth = Math.min(triangle_true[0].getX(),triangle_true[1].getX());
 		minwidth = Math.min(minwidth,triangle_true[2].getX());
 
 
-		double maxlength = Math.max(triangle_true[0].getZ(),triangle_true[1].getZ());
+		float maxlength = Math.max(triangle_true[0].getZ(),triangle_true[1].getZ());
 		maxlength = Math.max(maxlength,triangle_true[2].getZ());
-		double minlength = Math.min(triangle_true[0].getZ(),triangle_true[1].getZ());
+		float minlength = Math.min(triangle_true[0].getZ(),triangle_true[1].getZ());
 		minlength = Math.min(minlength,triangle_true[2].getZ());
 
 		return new Vector3D((maxwidth+minwidth)/2,(maxheight+minheight)/2,(maxlength+minlength)/2);

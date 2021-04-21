@@ -14,8 +14,8 @@ public class Shape extends RenderableObject {
 	public Vector3D[] vertexes;
 	private Vector3D minLocation;
 	private Vector3D maxLocation;
-	private double yaw = 0;
-	private double pitch = 0;
+	private float yaw = 0;
+	private float pitch = 0;
 
 	public RenderableObject clone(){
 		Shape shape = new Shape(vertexes);
@@ -35,7 +35,7 @@ public class Shape extends RenderableObject {
 		this.vertexes = vertexes;
 		minLocation = MathUtil.getMinVector(true, vertexes).clone();
 		maxLocation = MathUtil.getMaxVector(true,vertexes).clone();
-		updateTriangles();
+		setUpdateTrianglesWithGPU();
 	}
 
 	public void registerTriangle(int v1, int v2, int v3, Color c){
@@ -92,7 +92,7 @@ public class Shape extends RenderableObject {
 	}
 
 	@Override
-	public boolean isInside(Vector3D location, double size) {
+	public boolean isInside(Vector3D location, float size) {
 		return false;
 	}
 
@@ -103,22 +103,22 @@ public class Shape extends RenderableObject {
 	}
 
 	@Override
-	public double getYaw() {
+	public float getYaw() {
 		return yaw;
 	}
 
 	@Override
-	public void setYaw(double yaw) {
+	public void setYaw(float yaw) {
 this.yaw = yaw;
 	}
 
 	@Override
-	public double getPitch() {
+	public float getPitch() {
 		return pitch;
 	}
 
 	@Override
-	public void setPitch(double pitch) {
+	public void setPitch(float pitch) {
 this.pitch = pitch;
 	}
 
@@ -131,17 +131,17 @@ this.pitch = pitch;
 	}
 
 	@Override
-	public RenderableObject setSize(double width, double height, double length) {
+	public RenderableObject setSize(float width, float height, float length) {
 		resize(maxLocation, new Vector3D(minLocation).add(width,height,length));
 		maxLocation = new Vector3D(minLocation).add(width,height,length);
 		return this;
 	}
 
 	@Override
-	public RenderableObject setSize(double resize) {
-		double xoffset = maxLocation.getX()-minLocation.getX();
-		double yoffset = maxLocation.getY()-minLocation.getY();
-		double zoffset = maxLocation.getZ()-minLocation.getZ();
+	public RenderableObject setSize(float resize) {
+		float xoffset = maxLocation.getX()-minLocation.getX();
+		float yoffset = maxLocation.getY()-minLocation.getY();
+		float zoffset = maxLocation.getZ()-minLocation.getZ();
 		xoffset*=resize;
 		yoffset*=resize;
 		zoffset*=resize;
@@ -150,10 +150,10 @@ this.pitch = pitch;
 		return null;
 	}
 
-	public void updateTriangles(Vector3D newLocation) {
+	/*public void updateTriangles(Vector3D newLocation) {
 		Vector3D offset = new Vector3D(newLocation);
 		offset.subtract(minLocation);
 		shiftTriangles(offset);
 		super.updateTriangles();
-	}
+	}*/
 }

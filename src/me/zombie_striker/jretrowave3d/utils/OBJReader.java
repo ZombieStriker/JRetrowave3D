@@ -15,22 +15,22 @@ public class OBJReader {
 		return renderObject(inputStream,-1,-1,-1, color, false);
 	}
 
-	public static RenderableObject renderObject(InputStream inputStream, Color color, double size) {
+	public static RenderableObject renderObject(InputStream inputStream, Color color, float size) {
 		return renderObject(inputStream,size,size,size,color,false);
 	}
-	public static RenderableObject renderObject(InputStream inputStream, double width, double height, double length, Color color, boolean scaleSidesIndividually) {
+	public static RenderableObject renderObject(InputStream inputStream, float width, float height, float length, Color color, boolean scaleSidesIndividually) {
 		String[] parsed = parseFile(inputStream);
 		List<Vector3D> vertexes = new ArrayList<>();
-		double maxWidth = 0;
-		double maxHeight = 0;
-		double maxlength = 0;
-		double maxScale = 0;
+		float maxWidth = 0;
+		float maxHeight = 0;
+		float maxlength = 0;
+		float maxScale = 0;
 		for (String s : parsed) {
 			if (s.startsWith("v  ")) {
 				String[] parts = s.split("v  ")[1].split(" ");
-				double x = Double.parseDouble(parts[0]);
-				double y = Double.parseDouble(parts[1]);
-				double z = Double.parseDouble(parts[2]);
+				float x = Float.parseFloat(parts[0]);
+				float y = Float.parseFloat(parts[1]);
+				float z = Float.parseFloat(parts[2]);
 				vertexes.add(new Vector3D(x,y,z));
 				if(maxWidth < x)
 					maxWidth = x;
@@ -47,9 +47,9 @@ public class OBJReader {
 					maxScale = z;
 			}else if (s.startsWith("v ")) {
 				String[] parts = s.split(" ");
-				double x = Double.parseDouble(parts[1]);
-				double y = Double.parseDouble(parts[2]);
-				double z = Double.parseDouble(parts[3]);
+				float x = Float.parseFloat(parts[1]);
+				float y = Float.parseFloat(parts[2]);
+				float z = Float.parseFloat(parts[3]);
 				vertexes.add(new Vector3D(x,y,z));
 				if(maxWidth < x)
 					maxWidth = x;

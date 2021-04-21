@@ -364,7 +364,7 @@ public class Draw {
 			Line line = new Line(triangle.getRelativeLocation()[0], new Vector3D(triangle.getRelativeLocation()[0].getX() - normal.getX(), triangle.getRelativeLocation()[0].getY() - normal.getY(), triangle.getRelativeLocation()[0].getZ() - normal.getZ()));
 			//g.setColor(new Color(255, 0, 255));
 			//drawLine(bi, g, world, x, y, line);
-			drawTriangle(wrapper, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01, line.getEnd().getY(), line.getEnd().getZ() + 0.1), new Color(255, 0, 160)), false, true);
+			drawTriangle(wrapper, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01f, line.getEnd().getY(), line.getEnd().getZ() + 0.1f), new Color(255, 0, 160)), false, true);
 		}
 		//if (color == null)
 	/*	g.setColor(new Color(255, 0, 0));

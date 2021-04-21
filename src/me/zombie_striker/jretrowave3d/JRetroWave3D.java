@@ -1,6 +1,7 @@
 package me.zombie_striker.jretrowave3d;
 
 import me.zombie_striker.jretrowave3d.data.ScreenWrapper;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.utils.Draw;
 
 import java.awt.*;
@@ -28,6 +29,8 @@ public class JRetroWave3D {
 		while (true) {
 			long start = System.currentTimeMillis();
 			game.tick();
+			if(RenderableObject.shouldUpdateWithGPU())
+				RenderableObject.updateTrianglesGPU();
 
 
 			//BufferedImage screen = new BufferedImage(getWindow().getWidth(), getWindow().getHeight(), BufferedImage.TYPE_INT_ARGB);

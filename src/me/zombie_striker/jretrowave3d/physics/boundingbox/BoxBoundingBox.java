@@ -6,9 +6,9 @@ public class BoxBoundingBox implements BoundingBox {
 
 	private Vector3D mincorder;
 	private Vector3D maxCorner;
-	private double width;
-	private double height;
-	private double length;
+	private float width;
+	private float height;
+	private float length;
 
 	public BoxBoundingBox(Vector3D min, Vector3D max) {
 		this.mincorder = min;
@@ -17,7 +17,7 @@ public class BoxBoundingBox implements BoundingBox {
 		this.height = max.getY() - min.getY();
 		this.length = max.getZ() - min.getZ();
 	}
-	public BoxBoundingBox(Vector3D location, double width, double height, double length){
+	public BoxBoundingBox(Vector3D location, float width, float height, float length){
 		this.mincorder = location;
 		this.maxCorner = new Vector3D(location);
 		this.maxCorner.add(width,height,length);

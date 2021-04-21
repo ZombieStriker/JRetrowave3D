@@ -12,7 +12,7 @@ import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
 public class MovableObject extends WorldObject implements TickableObject {
 
-	private double gravityPerTick = -0.002;
+	private float gravityPerTick = -0.002f;
 	private Vector3D velocity = new Vector3D(0, 0, 0);
 	private boolean applyGravity = true;
 	private boolean hasVelocity = true;
@@ -51,7 +51,7 @@ public class MovableObject extends WorldObject implements TickableObject {
 			for (BoundingBox box : getWorld().getBoundingBoxes()) {
 				if (box != getBoundingBox() && box.collides(getBoundingBox(), goingTo, current)) {
 					teleport(current);
-					this.velocity.setY(-(velocity.getY())/1.5);
+					this.velocity.setY(-(velocity.getY())/1.5f);
 					break;
 				}
 			}
@@ -66,15 +66,15 @@ public class MovableObject extends WorldObject implements TickableObject {
 			}
 
 		}
-		getRender().updateTriangles();
+		getRender().setUpdateTrianglesWithGPU();
 	}
 	public Vector3D getVelocity(){
 	return velocity;
 	}
-	public void setGravity(double v){
+	public void setGravity(float v){
 		this.gravityPerTick = v;
 	}
-	public double getGravityPerTick(){
+	public float getGravityPerTick(){
 		return gravityPerTick;
 	}
 }
