@@ -10,6 +10,16 @@ import java.io.IOException;
 
 public class Draw {
 
+	public static BufferedImage render(int[][] pixels){
+		BufferedImage bi = new BufferedImage(pixels.length,pixels[0].length, BufferedImage.TYPE_INT_ARGB);
+		for(int x = 0; x < bi.getWidth(); x++) {
+			for(int y = 0; y < bi.getHeight(); y++) {
+				bi.setRGB(x,y,pixels[x][y]);
+			}
+		}
+		return bi;
+	}
+
 
 	public static void drawLine(Graphics2D bi, int startX, int startY, int endX, int endY) {
 		double slope = 1;
@@ -69,11 +79,11 @@ public class Draw {
 		}
 	}
 
-	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material) {
-		fillTriangle(bi, g, xoff, yoff, p1, p2, p3, material, 0);
+	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, Color color) {
+		fillTriangle(wrapper, xoff, yoff, p1, p2, p3, material, 0, color);
 	}
 
-	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, int drawExtra) {
+	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, int drawExtra, Color color) {
 		int[] x = new int[3];
 		int[] y = new int[3];
 		int n;
@@ -87,14 +97,14 @@ public class Draw {
 
 		n = 3;
 
-		fillTriangle(bi, g, xoff, yoff, x, y, n, material, drawExtra);
+		fillTriangle(wrapper, xoff, yoff, x, y, n, material, drawExtra,color);
 	}
 
-	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material) {
-		fillTriangle(bi, g, xoff, yoff, x, y, n, material, 0);
+	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, Color color) {
+		fillTriangle(wrapper, xoff, yoff, x, y, n, material, 0, color);
 	}
 
-	public static void fillTriangle(BufferedImage bi, Graphics2D g, int xoff, int yoff, int[] x, int[] y, int n, Material material, int drawExtra) {
+	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, int drawExtra, Color color) {
 		int bix = 0;
 		int biy = 0;
 		int bixmin = Integer.MAX_VALUE;
@@ -120,69 +130,14 @@ public class Draw {
 			return;
 		}
 
-		/*for (int i = 0; i < x.length; i++) {
-			int ytemp = y[i];
-			int xtemp = x[i];
-			if (ytemp < 0) {
-				int[] x1 = MathUtil.copy(x);
-				int[] y1 = MathUtil.copy(y);
-				if(i==0) {
-					x1[2] = x1[0];
-					y1[2] = y1[0];
-					x1[0] = 0;
-					y1[0] = 0;
-				}
-				if(i==1) {
-					x1[0] = x1[1];
-					y1[0] = y1[1];
-					x1[1] = 0;
-					y1[1] = 0;
-				}
-				if(i==2) {
-					x1[1] = x1[2];
-					y1[1] = y1[2];
-					x1[2] = 0;
-					y1[2] = 0;
-				}
-				if(drawExtra<=20)
-				fillTriangle(bi,g,xoff,yoff,x1,y1,n,material,drawExtra+1);
-				y[i] = 0;
-			}
-			if (ytemp > bi.getHeight()) {
-				int[] x1 = MathUtil.copy(x);
-				int[] y1 = MathUtil.copy(y);
-				System.out.println(i);
-				if(i==0) {
-					x1[0] = bi.getWidth();
-					y1[0] = bi.getHeight();
-				}
-				if(i==1) {
-					x1[1] = bi.getWidth();
-					y1[1] = bi.getHeight();
-				}
-				if(i==2) {
-					x1[2] = bi.getWidth();
-					y1[2] = bi.getHeight();
-				}
-				if(drawExtra<=20)
-				fillTriangle(bi,g,xoff,yoff,x1,y1,n,material,drawExtra+1);
-				y[i] = bi.getHeight();
-			}
-			if (xtemp < 0) {
-				x[i] = 0;
-			}
-			if (xtemp > bi.getWidth()) {
-				x[i] = bi.getWidth();
-			}
-		}*/
-
 		Polygon p = new Polygon(x, y, n);
+		wrapper.addPolygon(p,color);
 
-
-		if (material != null) {
+		/*if (material != null) {
 		} else {
 			g.fillPolygon(p);
-		}
+
+		}*/
 
 
 	}
@@ -273,113 +228,76 @@ public class Draw {
 	}
 
 
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean drawNormal) {
-		drawTriangle(bi, g, world, x, y, triangle, drawNormal, false);
+	public static void drawTriangle(ScreenWrapper wrapper, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawRelativeToCamera) {
+		drawTriangle(wrapper, world, x, y, triangle, drawNormal, false, drawRelativeToCamera);
 	}
 
-	public static void drawTriangle(BufferedImage bi, Graphics2D g, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal) {
-
+	public static void drawTriangle(ScreenWrapper wrapper, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal, boolean drawRelativeToCamra) {
+		Color color = triangle.getColor();
 		if (drawingNormal) {
-			if (triangle.getColor() != null)
-				g.setColor(triangle.getColor());
-
 		} else {
 			if (triangle.getColor() != null)
-				g.setColor(LightManager.getColorFromLightsources(triangle, world));
+				color = (LightManager.getColorFromLightsources(triangle, world,false));
 		}
-		/*double cosy = Math.cos(world.camera.getYawRadians());
-		double siny = Math.sin(world.camera.getYawRadians());
 
-		double cosp = Math.cos(world.camera.getPitchRadians());
-		double sinp = Math.sin(world.camera.getPitchRadians());
+		double zdifA;
+		double ydifA;
+		double xdifA;
 
-		double cosr = Math.cos(world.camera.getRollRadians());
-		double sinr = Math.sin(world.camera.getRollRadians());*/
+		double zdifB;
+		double ydifB;
+		double xdifB;
 
-		/*double cosPitch = Math.cos(world.camera.getPitchRadians());
-		double sinPitch = Math.sin(world.camera.getPitchRadians()); // Pitch is the altitude of the forward vector off the xy plane, toward the down direction.
-		double pitch = -Math.asin(world.camera.getPitchRadians() - (Math.PI/2));*/
+		double zdifC;
+		double ydifC;
+		double xdifC;
 
+		zdifA = (triangle.getPoints()[0].getZ() - world.camera.getLocation().getZ());
+		ydifA = (triangle.getPoints()[0].getY() - world.camera.getLocation().getY());
+		xdifA = (triangle.getPoints()[0].getX() - world.camera.getLocation().getX());
 
-		//System.out.println(cosPitch);
-		//System.out.println(pitch);
+		zdifB = (triangle.getPoints()[1].getZ() - world.camera.getLocation().getZ());
+		ydifB = (triangle.getPoints()[1].getY() - world.camera.getLocation().getY());
+		xdifB = (triangle.getPoints()[1].getX() - world.camera.getLocation().getX());
 
-		double zdifA = (triangle.getPoints()[0].getZ() - world.camera.getLocation().getZ());
-		double ydifA = (triangle.getPoints()[0].getY() - world.camera.getLocation().getY());
-		double xdifA = (triangle.getPoints()[0].getX() - world.camera.getLocation().getX());
+		zdifC = (triangle.getPoints()[2].getZ() - world.camera.getLocation().getZ());
+		ydifC = (triangle.getPoints()[2].getY() - world.camera.getLocation().getY());
+		xdifC = (triangle.getPoints()[2].getX() - world.camera.getLocation().getX());
 
-		double zdifB = (triangle.getPoints()[1].getZ() - world.camera.getLocation().getZ());
-		double ydifB = (triangle.getPoints()[1].getY() - world.camera.getLocation().getY());
-		double xdifB = (triangle.getPoints()[1].getX() - world.camera.getLocation().getX());
-
-		double zdifC = (triangle.getPoints()[2].getZ() - world.camera.getLocation().getZ());
-		double ydifC = (triangle.getPoints()[2].getY() - world.camera.getLocation().getY());
-		double xdifC = (triangle.getPoints()[2].getX() - world.camera.getLocation().getX());
-
-
-		/*double zxdistance1 = (cosy * zdifA) - (siny * xdifA); // Col 3
-		double xzdistance1 = (cosy * xdifA) + (siny * zdifA); //Col 2
-		double zxdistance2 = (cosy * zdifB) - (siny * xdifB);
-		double xzdistance2 = (cosy * xdifB) + (siny * zdifB);
-		double zxdistance3 = (cosy * zdifC) - (siny * xdifC);
-		double xzdistance3 = (cosy * xdifC) + (siny * zdifC);*/
 
 		double x1 = (((xdifA) / (zdifA)));
 		double x2 = (((xdifB) / (zdifB)));
 		double x3 = (((xdifC) / (zdifC)));
-		/*double x1 = (((xzdistance1) / (zxdistance1)));
-		double x2 = (((xzdistance2) / (zxdistance2)));
-		double x3 = (((xzdistance3) / (zxdistance3)));*/
 
 		double y1 = ((((-ydifA / (zdifA)))));
 		double y2 = ((((-ydifB / (zdifB)))));
 		double y3 = ((((-ydifC / (zdifC)))));
 
-		/*if(x1 < -bi.getWidth()/2){
-			x1=-bi.getWidth()/2;
-		}
-		if(x2 < -bi.getWidth()/2){
-			x2=-bi.getWidth()/2;
-		}
-		if(x3 < -bi.getWidth()/2){
-			x3=-bi.getWidth()/2;
-		}
-
-		if(y1 < -bi.getHeight()/2){
-			y1=-bi.getHeight()/2;
-		}
-		if(y2 < -bi.getHeight()/2){
-			y2=-bi.getHeight()/2;
-		}
-		if(y3 < -bi.getHeight()/2){
-			y3=-bi.getHeight()/2;
-		}*/
-
 		//TODO: Check if this is working
 		if (zdifA < 0) {
 			//y1=y1;
 			if (ydifA < 0) {
-				y1 += bi.getHeight();
+				y1 += wrapper.getHeight();
 			} else {
-				y1 -= bi.getHeight();
+				y1 -= wrapper.getHeight();
 			}
 			if (xdifA < 0) {
-				x1 -= bi.getWidth();
+				x1 -= wrapper.getWidth();
 			} else {
-				x1 -= bi.getWidth();
+				x1 -= wrapper.getWidth();
 			}
 		}
 		if (zdifB < 0) {
 			//	y2=y2;
 			if (ydifB < 0) {
-				y2 += bi.getHeight();
+				y2 += wrapper.getHeight();
 			} else {
-				y2-= bi.getHeight();
+				y2 -= wrapper.getHeight();
 			}
 			if (xdifB < 0) {
-				x2 -= bi.getWidth();
+				x2 -= wrapper.getWidth();
 			} else {
-				x2 -= bi.getWidth();
+				x2 -= wrapper.getWidth();
 			}
 			//x2+=bi.getWidth();
 			//x2=-x2;
@@ -387,88 +305,58 @@ public class Draw {
 		if (zdifC < 0) {
 			//y3=y3;
 			if (ydifC < 0) {
-				y3 += bi.getHeight();
+				y3 += wrapper.getHeight();
 			} else {
-				y3 -= bi.getHeight();
+				y3 -= wrapper.getHeight();
 			}
 			if (xdifC < 0) {
-				x3 -= bi.getWidth();
+				x3 -= wrapper.getWidth();
 			} else {
-				x3 -= bi.getWidth();
+				x3 -= wrapper.getWidth();
 			}
 			//	x3+=bi.getWidth();
 			//x3=-x3;
 		}
-		/*double y1 = ((((-ydifA / (zxdistance1)))));
-		double y2 = ((((-ydifB / (zxdistance2)))));
-		double y3 = ((((-ydifC / (zxdistance3)))));*/
-		/*double x1 = (((xdif0) / (zdif0)));
-		double x2 = (((xdif1) / (zdif1)));
-		double x3 = (((xdif2) / (zdif2)));
 
-		double y1 = ((((-ydifA / (zdif0)) )));
-		double y2 = ((((-ydifB / (zdif1)) )));
-		double y3 = ((((-ydifC / (zdif2)) )));*/
-
-
-		//Location2D point1 = new Location2D(x1, y1+(((xyz[0][0]* bi.getHeight() / 8))));
-		//Location2D point2 = new Location2D(x2, y2+((( xyz2[0][0]* bi.getHeight() / 8))));
-		//Location2D point3 = new Location2D(x3, y3+((( xyz3[0][0]* bi.getHeight() / 8))));
 		Vector2D point1 = new Vector2D(x1, y1);
 		Vector2D point2 = new Vector2D(x2, y2);
 		Vector2D point3 = new Vector2D(x3, y3);
-		/*Vector2D point1 = new Vector2D( x1,  y1);
-		Vector2D point2 = new Vector2D( x2, y2);
-		Vector2D point3 = new Vector2D( x3,  y3);*/
-		point1.multiply(bi.getHeight() / 2);
-		point2.multiply(bi.getHeight() / 2);
-		point3.multiply(bi.getHeight() / 2);
+
+		point1.multiply(wrapper.getHeight() / 2);
+		point2.multiply(wrapper.getHeight() / 2);
+		point3.multiply(wrapper.getHeight() / 2);
 
 		if (point1.isInfinite()) {
-			if(Double.isInfinite(point1.getX())){
-				point1.setX(bi.getWidth());
+			if (Double.isInfinite(point1.getX())) {
+				point1.setX(wrapper.getWidth());
 			}
-			if(Double.isInfinite(point1.getY())){
-				point1.setX(bi.getHeight());
+			if (Double.isInfinite(point1.getY())) {
+				point1.setY(wrapper.getHeight());
 			}
-			System.out.println("p1 "+point1.getX()+" "+point1.getY());
+			System.out.println("p1 " + point1.getX() + " " + point1.getY());
 		}
 		if (point2.isInfinite()) {
-			if(Double.isInfinite(point2.getX())){
-				point2.setX(bi.getWidth());
+			if (Double.isInfinite(point2.getX())) {
+				point2.setX(wrapper.getWidth());
 			}
-			if(Double.isInfinite(point2.getY())){
-				point2.setX(bi.getHeight());
+			if (Double.isInfinite(point2.getY())) {
+				point2.setY(wrapper.getHeight());
 			}
-			System.out.println("p2 "+point2.getX()+" "+point2.getY());
+			System.out.println("p2 " + point2.getX() + " " + point2.getY());
 		}
 		if (point3.isInfinite()) {
-			if(Double.isInfinite(point3.getX())){
-				point3.setX(bi.getWidth());
+			if (Double.isInfinite(point3.getX())) {
+				point3.setX(wrapper.getWidth());
 			}
-			if(Double.isInfinite(point3.getY())){
-				point3.setX(bi.getHeight());
+			if (Double.isInfinite(point3.getY())) {
+				point3.setY(wrapper.getHeight());
 			}
-			System.out.println("p3 "+point3.getX()+" "+point3.getY());
+			System.out.println("p3 " + point3.getX() + " " + point3.getY());
 		}
 
 
-		/*if (point1.getX() > bi.getWidth())
-			return;
-		if (point1.getX() < -bi.getWidth())
-			return;
 
-		if (point2.getX() > bi.getWidth())
-			return;
-		if (point2.getX() < -bi.getWidth())
-			return;
-
-		if (point3.getX() > bi.getWidth())
-			return;
-		if (point3.getX() < -bi.getWidth())
-			return;*/
-
-		fillTriangle(bi, g, x, y, point1, point2, point3, triangle.getMaterial());
+		fillTriangle(wrapper, x, y, point1, point2, point3, triangle.getMaterial(),color);
 
 		if (drawNormal) {
 			Vector3D normal = triangle.getNormal(false);
@@ -476,7 +364,7 @@ public class Draw {
 			Line line = new Line(triangle.getRelativeLocation()[0], new Vector3D(triangle.getRelativeLocation()[0].getX() - normal.getX(), triangle.getRelativeLocation()[0].getY() - normal.getY(), triangle.getRelativeLocation()[0].getZ() - normal.getZ()));
 			//g.setColor(new Color(255, 0, 255));
 			//drawLine(bi, g, world, x, y, line);
-			drawTriangle(bi, g, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01, line.getEnd().getY(), line.getEnd().getZ() + 0.1), new Color(255, 0, 160)), false, true);
+			drawTriangle(wrapper, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01, line.getEnd().getY(), line.getEnd().getZ() + 0.1), new Color(255, 0, 160)), false, true);
 		}
 		//if (color == null)
 	/*	g.setColor(new Color(255, 0, 0));

@@ -40,19 +40,19 @@ public class Cube extends RenderableObject {
 	}
 
 	public void resetTriangles() {
-		Vector3D center = bottomCorner;
+		Vector3D bottomcorner = new Vector3D(bottomCorner);
 		double width = topCorner.getX() - bottomCorner.getX();
 		double height = topCorner.getY() - bottomCorner.getY();
 		double length = topCorner.getZ() - bottomCorner.getZ();
-		Vector3D toprightfront = new Vector3D(center.getX() + width, center.getY() + height, center.getZ() + length);
-		Vector3D toprightback = new Vector3D(center.getX() + width, center.getY() + height, center.getZ());
-		Vector3D topleftfront = new Vector3D(center.getX(), center.getY() + height, center.getZ() + length);
-		Vector3D topleftback = new Vector3D(center.getX(), center.getY() + height, center.getZ());
+		Vector3D toprightfront = new Vector3D(bottomcorner.getX() + width, bottomcorner.getY() + height, bottomcorner.getZ() + length);
+		Vector3D toprightback = new Vector3D(bottomcorner.getX() + width, bottomcorner.getY() + height, bottomcorner.getZ());
+		Vector3D topleftfront = new Vector3D(bottomcorner.getX(), bottomcorner.getY() + height, bottomcorner.getZ() + length);
+		Vector3D topleftback = new Vector3D(bottomcorner.getX(), bottomcorner.getY() + height, bottomcorner.getZ());
 
-		Vector3D bottomrightfront = new Vector3D(center.getX() + width, center.getY(), center.getZ() + length);
-		Vector3D bottomrightback = new Vector3D(center.getX() + width, center.getY(), center.getZ());
-		Vector3D bottomleftfront = new Vector3D(center.getX(), center.getY(), center.getZ() + length);
-		Vector3D bottomleftback = new Vector3D(center.getX(), center.getY(), center.getZ());
+		Vector3D bottomrightfront = new Vector3D(bottomcorner.getX() + width, bottomcorner.getY(), bottomcorner.getZ() + length);
+		Vector3D bottomrightback = new Vector3D(bottomcorner.getX() + width, bottomcorner.getY(), bottomcorner.getZ());
+		Vector3D bottomleftfront = new Vector3D(bottomcorner.getX(), bottomcorner.getY(), bottomcorner.getZ() + length);
+		Vector3D bottomleftback = new Vector3D(bottomcorner.getX(), bottomcorner.getY(), bottomcorner.getZ());
 
 		getTriangles()[0] = new Triangle(topleftfront, bottomrightfront, bottomleftfront, new Color(255, 0, 0)); //front bottom
 		getTriangles()[1] = new Triangle(toprightback, bottomleftback, bottomrightback, new Color(11, 255, 0)); //back bottom
@@ -93,10 +93,37 @@ public class Cube extends RenderableObject {
 	public void teleport(Vector3D location) {
 		Vector3D dif = new Vector3D(topCorner);
 		dif.subtract(bottomCorner);
-		bottomCorner = location;
+		bottomCorner = new Vector3D(location);
 		topCorner = new Vector3D(location);
 		topCorner.add(dif);
 		resetTriangles();
+	}
+
+	public RenderableObject clone(){
+		Cube shape = new Cube(bottomCorner,topCorner.getX()-bottomCorner.getX(),topCorner.getY()-bottomCorner.getY(),topCorner.getZ()-bottomCorner.getZ());
+		shape.setTriangles(getTriangles());
+		shape.bottomCorner =new Vector3D(bottomCorner);
+		shape.topCorner=new Vector3D(topCorner);
+		return shape;
+	}
+	@Override
+	public RenderableObject setSize(double width, double height, double length) {
+		resize(topCorner, new Vector3D(bottomCorner).add(width,height,length));
+		topCorner = new Vector3D(bottomCorner).add(width,height,length);
+		return this;
+	}
+
+	@Override
+	public RenderableObject setSize(double resize) {
+		double xoffset = topCorner.getX()-bottomCorner.getX();
+		double yoffset = topCorner.getY()-bottomCorner.getY();
+		double zoffset = topCorner.getZ()-bottomCorner.getZ();
+		xoffset*=resize;
+		yoffset*=resize;
+		zoffset*=resize;
+		resize(topCorner, new Vector3D(bottomCorner).add(xoffset,yoffset,zoffset));
+		topCorner = new Vector3D(bottomCorner).add(xoffset,yoffset,zoffset);
+		return this;
 	}
 
 
@@ -135,7 +162,7 @@ public class Cube extends RenderableObject {
 
 	@Override
 	public Vector3D getLocation() {
-		return bottomCorner;
+		return new Vector3D(bottomCorner);
 	}
 
 	@Override

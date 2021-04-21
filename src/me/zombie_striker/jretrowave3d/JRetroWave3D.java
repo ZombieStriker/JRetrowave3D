@@ -1,10 +1,12 @@
 package me.zombie_striker.jretrowave3d;
 
+import me.zombie_striker.jretrowave3d.data.ScreenWrapper;
+import me.zombie_striker.jretrowave3d.utils.Draw;
+
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 
 public class JRetroWave3D {
 
@@ -22,16 +24,21 @@ public class JRetroWave3D {
 	}
 
 	public static void start(){
-
+		ScreenWrapper screenwrapper = new ScreenWrapper(getWindow().getWidth(),getWindow().getHeight());
 		while (true) {
 			long start = System.currentTimeMillis();
 			game.tick();
 
 
-			BufferedImage screen = new BufferedImage(getWindow().getWidth(), getWindow().getHeight(), BufferedImage.TYPE_INT_ARGB);
-			game.getWorld().render(screen);
-			game.render(screen);
-			getWindow().getDisplay().setDisplay(screen);
+			//BufferedImage screen = new BufferedImage(getWindow().getWidth(), getWindow().getHeight(), BufferedImage.TYPE_INT_ARGB);
+			if(screenwrapper.getWidth() != getWindow().getWidth() || screenwrapper.getHeight() != getWindow().getHeight()){
+				screenwrapper = new ScreenWrapper(getWindow().getWidth(),getWindow().getHeight());
+			}
+			game.getWorld().render(screenwrapper);
+			screenwrapper.drawPolygons(true);
+			screenwrapper.clearPolygons();
+			game.render(screenwrapper);
+			getWindow().getDisplay().setDisplay(Draw.render(screenwrapper.getPixels()));
 
 			try {
 				long wait = (10 - (System.currentTimeMillis() - start));
@@ -39,16 +46,6 @@ public class JRetroWave3D {
 					Thread.sleep(wait);
 			} catch (InterruptedException e) {
 			}
-
-			long end = System.currentTimeMillis();
-
-			long elapsed = end - start;
-
-			int fps = (int) (1000.0 / (elapsed));
-
-			window.getDisplay().image.getGraphics().drawString("FPS: " + fps + " : " + (end % 100), 10, 10);
-			window.getDisplay().image.getGraphics().drawString("YAW: " + game.getWorld().camera.getYaw() + " : PITCH " + game.getWorld().camera.getPitchRadians(), 10, 20);
-
 			window.repaint();
 		}
 	}

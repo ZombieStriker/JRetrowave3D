@@ -42,4 +42,44 @@ public class MathUtil {
 		y1[i]=src[i];
 		return y1;
 	}
+
+	public static Vector3D getMaxVector(boolean b, Vector3D[] vertexes) {
+		Vector3D min = vertexes[0].clone();
+		for(Vector3D v : vertexes){
+			if(b){
+				if(v.getX() > min.getX()){
+					min.setX(v.getX());
+				}
+				if(v.getY() > min.getY()){
+					min.setY(v.getY());
+				}
+				if(v.getZ() > min.getZ()){
+					min.setZ(v.getZ());
+				}
+			}else{
+				//TODO: Add if I want to get the Point, not absolute
+			}
+		}
+		return min;
+	}
+
+	public static Vector3D getMinVector(boolean b, Vector3D[] vertexes) {
+		Vector3D min = vertexes[0].clone();
+		for(Vector3D v : vertexes){
+			if(b){
+				if(v.getX() < min.getX()){
+					min.setX(v.getX());
+				}
+				if(v.getY() < min.getY()){
+					min.setY(v.getY());
+				}
+				if(v.getZ() < min.getZ()){
+					min.setZ(v.getZ());
+				}
+			}else{
+				//TODO: Add if I want to get the Point, not absolute
+			}
+		}
+		return min;
+	}
 }

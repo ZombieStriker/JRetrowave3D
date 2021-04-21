@@ -17,6 +17,14 @@ public class BoxBoundingBox implements BoundingBox {
 		this.height = max.getY() - min.getY();
 		this.length = max.getZ() - min.getZ();
 	}
+	public BoxBoundingBox(Vector3D location, double width, double height, double length){
+		this.mincorder = location;
+		this.maxCorner = new Vector3D(location);
+		this.maxCorner.add(width,height,length);
+		this.width = width;
+		this.height = height;
+		this.length = length;
+	}
 
 	@Override
 	public boolean collides(Vector3D point) {

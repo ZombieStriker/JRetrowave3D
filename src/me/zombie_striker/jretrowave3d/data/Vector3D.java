@@ -30,6 +30,10 @@ public class Vector3D {
 	}
 
 
+	public Vector3D clone(){
+		return new Vector3D(this);
+	}
+
 	public double getX() {
 		return x;
 	}
@@ -95,16 +99,18 @@ public class Vector3D {
 		return (x * x) + (y * y) + (z * z);
 	}
 
-	public void add(Vector3D dif) {
+	public Vector3D add(Vector3D dif) {
 		this.x += dif.getX();
 		this.y += dif.getY();
 		this.z += dif.getZ();
+		return this;
 	}
 
-	public void subtract(Vector3D dif) {
+	public Vector3D subtract(Vector3D dif) {
 		this.x -= dif.getX();
 		this.y -= dif.getY();
 		this.z -= dif.getZ();
+		return this;
 	}
 
 	public double length() {
@@ -118,9 +124,10 @@ public class Vector3D {
 		this.z /= length;
 	}
 
-	public void add(double x, double y, double z) {
+	public Vector3D add(double x, double y, double z) {
 		this.x += x;
 		this.y += y;
 		this.z += z;
+		return this;
 	}
 }

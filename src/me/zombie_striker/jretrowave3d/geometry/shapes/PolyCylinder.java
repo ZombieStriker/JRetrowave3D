@@ -63,7 +63,7 @@ public class PolyCylinder extends RenderableObject {
 
 	@Override
 	public Vector3D getLocation() {
-		return bottomCorner;
+		return new Vector3D(bottomCorner);
 	}
 
 	@Override
@@ -112,5 +112,25 @@ public class PolyCylinder extends RenderableObject {
 		topCorner = new Vector3D(location);
 		topCorner.add(dif);
 		updateTriangles();
+	}
+
+	public RenderableObject clone(){
+		PolyCylinder shape = new PolyCylinder(bottomCorner,sides,topCorner.getX()-bottomCorner.getX(),topCorner.getY()-bottomCorner.getY(),topCorner.getZ()-bottomCorner.getZ());
+		shape.setTriangles(getTriangles());
+		shape.bottomCorner =new Vector3D(bottomCorner);
+		shape.topCorner=new Vector3D(topCorner);
+		return shape;
+	}
+
+	@Override
+	public RenderableObject setSize(double width, double height, double length) {
+		resize(topCorner, new Vector3D(bottomCorner).add(width,height,length));
+		topCorner = new Vector3D(bottomCorner).add(width,height,length);
+		return this;
+	}
+
+	@Override
+	public RenderableObject setSize(double size) {
+		return null;
 	}
 }

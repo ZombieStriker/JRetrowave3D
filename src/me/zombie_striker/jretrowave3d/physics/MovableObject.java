@@ -4,6 +4,9 @@ import me.zombie_striker.jretrowave3d.TickManager;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.TickableObject;
 import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.events.EventManager;
+import me.zombie_striker.jretrowave3d.events.types.ObjectFallOutOfWorldEvent;
+import me.zombie_striker.jretrowave3d.events.types.ProjectileHitEvent;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
@@ -41,25 +44,37 @@ public class MovableObject extends WorldObject implements TickableObject {
 			this.velocity.setY(this.velocity.getY() + gravityPerTick);
 		//System.out.println(this.velocity.getY());
 		if (hasVelocity()) {
-			Vector3D current = getLocation();
+			Vector3D current = new Vector3D(getLocation());
 			Vector3D goingTo = new Vector3D(getLocation());
 			goingTo.add(velocity);
 			teleport(goingTo);
 			for (BoundingBox box : getWorld().getBoundingBoxes()) {
 				if (box != getBoundingBox() && box.collides(getBoundingBox(), goingTo, current)) {
-					System.out.println("Colliding at "+goingTo.getX()+" "+goingTo.getY()+" "+goingTo.getZ());
 					teleport(current);
 					this.velocity.setY(-(velocity.getY())/1.5);
 					break;
 				}
 			}
 		}
+		if(getLocation().getY() < -1000){
+			ObjectFallOutOfWorldEvent event = new ObjectFallOutOfWorldEvent(this);
+			EventManager.call(event);
+			if(!event.isCanceled()){
+				getWorld().removeBoundingBox(getBoundingBox());
+				getWorld().removeToRender(getRender());
+				TickManager.removeTickableObject(this);
+			}
+
+		}
 		getRender().updateTriangles();
+	}
+	public Vector3D getVelocity(){
+	return velocity;
 	}
 	public void setGravity(double v){
 		this.gravityPerTick = v;
 	}
 	public double getGravityPerTick(){
-		return getGravityPerTick();
+		return gravityPerTick;
 	}
 }

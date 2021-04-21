@@ -1,12 +1,11 @@
 package me.zombie_striker.jretrowave3d;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import me.zombie_striker.jretrowave3d.data.ScreenWrapper;
 
 public interface GameEngine {
 
 	void init();
 	void tick();
-	void render(BufferedImage bi);
+	void render(ScreenWrapper bi);
 	World getWorld();
 }

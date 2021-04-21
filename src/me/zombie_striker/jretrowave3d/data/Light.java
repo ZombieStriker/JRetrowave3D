@@ -1,5 +1,7 @@
 package me.zombie_striker.jretrowave3d.data;
 
+import me.zombie_striker.jretrowave3d.LightManager;
+
 public class Light {
 
 	private Vector3D location;
@@ -16,7 +18,9 @@ public class Light {
 		return intensity;
 	}
 	public void teleport(Vector3D location){
+		boolean same = this.location.equals(location);
 		this.location = location;
-
+		if(!same)
+			LightManager.updateLights();
 	}
 }

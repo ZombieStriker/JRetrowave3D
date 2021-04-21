@@ -10,7 +10,7 @@ public class TickManager {
 	private static List<TickableObject> ticks = new ArrayList<>();
 
 	public static void tick(){
-		for(TickableObject tick : ticks){
+		for(TickableObject tick : new ArrayList<>(ticks)){
 			tick.tick();
 		}
 	}
@@ -18,4 +18,5 @@ public class TickManager {
 	public static void registerTickableObject(TickableObject tickableObject){
 		ticks.add(tickableObject);
 	}
+	public static void removeTickableObject(TickableObject tickableObject){ticks.remove(tickableObject);}
 }

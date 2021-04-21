@@ -1,6 +1,7 @@
 package me.zombie_striker.jretrowave3d;
 
 import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
 public class Camera {
 
@@ -80,9 +81,9 @@ public class Camera {
 	}
 
 	public Vector3D getDirection() {
-		double z = (Math.cos(getYawRadians()) - Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
+		double z = (Math.cos(getYawRadians()) /*- Math.sin(getYawRadians())*/)*Math.cos(getPitchRadians());
 		double y = Math.sin(getPitchRadians());
-		double x = (Math.cos(getYawRadians()) + Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
+		double x = (/*Math.cos(getYawRadians())*/ - Math.sin(getYawRadians()))*Math.cos(getPitchRadians());
 		return new Vector3D(x,-y,z);
 	}
 }

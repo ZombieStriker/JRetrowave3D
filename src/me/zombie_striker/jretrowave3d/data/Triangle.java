@@ -1,5 +1,6 @@
 package me.zombie_striker.jretrowave3d.data;
 
+import me.zombie_striker.jretrowave3d.LightManager;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.utils.MathUtil;
 
@@ -9,7 +10,8 @@ public class Triangle {
 
 	private Vector3D[] triangle = new Vector3D[3];
 	private Vector3D[] triangle_true = new Vector3D[3];
-	private Vector3D[] exactLocation = new Vector3D[3];
+	private Vector3D normal=null;
+	private Vector3D normal_true=null;
 	private Color color;
 	private Material material;
 
@@ -21,15 +23,16 @@ public class Triangle {
 		triangle_true[0] = new Vector3D(t1.getTrues()[0]);
 		triangle_true[1] = new Vector3D(t1.getTrues()[1]);
 		triangle_true[2] = new Vector3D(t1.getTrues()[2]);
-		exactLocation[0] = new Vector3D(t1.getExactLocation()[0]);
+		/*exactLocation[0] = new Vector3D(t1.getExactLocation()[0]);
 		exactLocation[1] = new Vector3D(t1.getExactLocation()[1]);
-		exactLocation[2] = new Vector3D(t1.getExactLocation()[2]);
+		exactLocation[2] = new Vector3D(t1.getExactLocation()[2]);*/
 		this.color = new Color(t1.getColor().getRGB());
 	}
+	//TODO: Test if we need exact location
 
-	public Vector3D[] getExactLocation() {
+	/*public Vector3D[] getExactLocation() {
 		return exactLocation;
-	}
+	}*/
 
 	public Triangle(Vector3D v1, Vector3D v2, Vector3D v3, Color color) {
 		triangle[0] = v1;
@@ -38,9 +41,9 @@ public class Triangle {
 		triangle_true[0] = new Vector3D(v1);
 		triangle_true[1] = new Vector3D(v2);
 		triangle_true[2] = new Vector3D(v3);
-		exactLocation[0] = new Vector3D(v1);
-		exactLocation[1] = new Vector3D(v2);
-		exactLocation[2] = new Vector3D(v3);
+		//exactLocation[0] = new Vector3D(v1);
+		//exactLocation[1] = new Vector3D(v2);
+		//exactLocation[2] = new Vector3D(v3);
 		this.color = color;
 	}
 
@@ -51,9 +54,9 @@ public class Triangle {
 		triangle_true[0] = new Vector3D(v1);
 		triangle_true[1] = new Vector3D(v2);
 		triangle_true[2] = new Vector3D(v3);
-		exactLocation[0] = new Vector3D(v1);
-		exactLocation[1] = new Vector3D(v2);
-		exactLocation[2] = new Vector3D(v3);
+	//	exactLocation[0] = new Vector3D(v1);
+		//exactLocation[1] = new Vector3D(v2);
+	//	exactLocation[2] = new Vector3D(v3);
 		this.material = texture;
 	}
 
@@ -68,6 +71,7 @@ public class Triangle {
 			v3.setY(v3.getY() - y);
 			v3.setZ(v3.getZ() - z);
 		}
+		LightManager.setTriangleToRelight(this);
 	}
 
 	public void add(double x, double y, double z) {
@@ -81,9 +85,23 @@ public class Triangle {
 			v3.setY(v3.getY() + y);
 			v3.setZ(v3.getZ() + z);
 		}
+		LightManager.setTriangleToRelight(this);
 	}
 
-	public Vector3D getNormal(boolean getTrueVertexes) {
+	public Vector3D getNormal(boolean trueVertexes){
+		if(normal_true!= null && trueVertexes){
+			return normal_true;
+		}
+		if(normal!=null && !trueVertexes){
+			return normal;
+		}
+		if(normal_true==null && trueVertexes){
+			return updateNormal(true);
+		}
+		return updateNormal(false);
+	}
+
+	public Vector3D updateNormal(boolean getTrueVertexes) {
 		Vector3D u;
 		Vector3D v;
 		if (getTrueVertexes) {
@@ -100,6 +118,11 @@ public class Triangle {
 		double normalz = (u.getX() * v.getY()) - (u.getY() * v.getX());
 
 		Vector3D normal = new Vector3D(normalx, normaly, normalz);
+		if(getTrueVertexes){
+			this.normal_true=normal;
+		}else{
+			this.normal=normal;
+		}
 		return normal;
 	}
 
@@ -162,21 +185,22 @@ public class Triangle {
 	}
 
 	public Vector3D getCenter() {
-		double maxheight = Math.max(exactLocation[0].getY(),exactLocation[1].getY());
-		maxheight = Math.max(maxheight,exactLocation[2].getY());
-		double minheight = Math.min(exactLocation[0].getY(),exactLocation[1].getY());
-		minheight = Math.min(minheight,exactLocation[2].getY());
+		//TODO: Swapped from exact location
+		double maxheight = Math.max(triangle_true[0].getY(),triangle_true[1].getY());
+		maxheight = Math.max(maxheight,triangle_true[2].getY());
+		double minheight = Math.min(triangle_true[0].getY(),triangle_true[1].getY());
+		minheight = Math.min(minheight,triangle_true[2].getY());
 
-		double maxwidth = Math.max(exactLocation[0].getX(),exactLocation[1].getX());
-		maxwidth = Math.max(maxwidth,exactLocation[2].getX());
-		double minwidth = Math.min(exactLocation[0].getX(),exactLocation[1].getX());
-		minwidth = Math.min(minwidth,exactLocation[2].getX());
+		double maxwidth = Math.max(triangle_true[0].getX(),triangle_true[1].getX());
+		maxwidth = Math.max(maxwidth,triangle_true[2].getX());
+		double minwidth = Math.min(triangle_true[0].getX(),triangle_true[1].getX());
+		minwidth = Math.min(minwidth,triangle_true[2].getX());
 
 
-		double maxlength = Math.max(exactLocation[0].getZ(),exactLocation[1].getZ());
-		maxlength = Math.max(maxlength,exactLocation[2].getZ());
-		double minlength = Math.min(exactLocation[0].getZ(),exactLocation[1].getZ());
-		minlength = Math.min(minlength,exactLocation[2].getZ());
+		double maxlength = Math.max(triangle_true[0].getZ(),triangle_true[1].getZ());
+		maxlength = Math.max(maxlength,triangle_true[2].getZ());
+		double minlength = Math.min(triangle_true[0].getZ(),triangle_true[1].getZ());
+		minlength = Math.min(minlength,triangle_true[2].getZ());
 
 		return new Vector3D((maxwidth+minwidth)/2,(maxheight+minheight)/2,(maxlength+minlength)/2);
 	}
