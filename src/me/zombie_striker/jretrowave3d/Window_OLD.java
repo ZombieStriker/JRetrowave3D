@@ -3,12 +3,12 @@ package me.zombie_striker.jretrowave3d;
 import javax.swing.*;
 import java.awt.*;
 
-public class Window extends JFrame {
+public class Window_OLD extends JFrame {
 
 	private Display display = new Display();
 
 
-	public Window() {
+	public Window_OLD() {
 		super("Test");
 	}
 

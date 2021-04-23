@@ -2,12 +2,11 @@ package me.zombie_striker.jretrowave3d;
 
 import me.zombie_striker.jretrowave3d.data.*;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
+import me.zombie_striker.jretrowave3d.graphics.Screen;
+import me.zombie_striker.jretrowave3d.graphics.TriangleRenderer;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 import me.zombie_striker.jretrowave3d.utils.Draw;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.*;
 
 public class World {
@@ -41,9 +40,7 @@ public class World {
 		return null;
 	}
 
-	public void render(ScreenWrapper renderto) {
-		ScreenWrapper bi = renderto;
-
+	public ObjectChain<TriangleRenderer> render(Screen screen, ObjectChain<TriangleRenderer> startRenderChain, ObjectChain<TriangleRenderer> currentChain) {
 		HashMap<Triangle, Float> triangleMap = new HashMap<>();
 		HashMap<Triangle, Float> triangleHeightDifMap = new HashMap<>();
 		List<Triangle> shouldDrawRelToScreen = new ArrayList<>();
@@ -89,7 +86,12 @@ public class World {
 		Collections.sort(list, new Comparator<Map.Entry<Triangle, Float>>() {
 			@Override
 			public int compare(Map.Entry<Triangle, Float> o1, Map.Entry<Triangle, Float> o2) {
-				if (false) {
+				if (true) {
+					if (o2.getValue().equals(o1.getValue())) {
+						if (!triangleHeightDifMap.get(o1.getKey()).equals(triangleHeightDifMap.get(o2.getKey()))) {
+							return triangleHeightDifMap.get(o1.getKey()).compareTo(triangleHeightDifMap.get(o2.getKey()));
+						}
+					}
 					return o1.getValue().compareTo(o2.getValue());
 				} else {
 					if (o2.getValue().equals(o1.getValue())) {
@@ -106,11 +108,15 @@ public class World {
 			sortedMap.put(entry.getKey(), entry.getValue());
 		}
 
-		for (Triangle plane : sortedMap.keySet()) {
-			if (plane != null) {
-				Draw.drawTriangle(renderto, this, (int) (((bi.getWidth() / 2))), (int) ((bi.getHeight() / 2)), plane, false, !shouldDrawRelToScreen.contains(plane));
+		ObjectChain<TriangleRenderer> cur = currentChain;
+
+		if (screen != null)
+			for (Triangle plane : sortedMap.keySet()) {
+				if (plane != null) {
+					cur = Draw.drawTriangle(screen, cur, this, (int) (((screen.getWidth() / 3))), (int) ((screen.getHeight() / 3)), plane, false, !shouldDrawRelToScreen.contains(plane));
+				}
 			}
-		}
+		return cur;
 	}
 
 	public Set<Light> getLights() {
@@ -138,8 +144,8 @@ public class World {
 	}
 
 	public boolean boundingBoxCollidesWith(BoundingBox box) {
-		for(BoundingBox boundingBox : boundingBoxes){
-			if(boundingBox.collides(box))
+		for (BoundingBox boundingBox : boundingBoxes) {
+			if (boundingBox.collides(box))
 				return true;
 		}
 		return false;

@@ -21,6 +21,7 @@ public class Shape extends RenderableObject {
 		Shape shape = new Shape(vertexes);
 		Triangle[] tt = new Triangle[getTriangles().length];
 		for(int i =0;i<getTriangles().length;i++){
+			if(getTriangles()[i]!=null)
 			tt[i]=new Triangle(getTriangles()[i].getTrues()[0].clone(),getTriangles()[i].getTrues()[1].clone(),getTriangles()[i].getTrues()[2].clone(),getTriangles()[i].getColor());
 		}
 		shape.setTriangles(tt);

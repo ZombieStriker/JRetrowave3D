@@ -1,6 +1,5 @@
-package me.zombie_striker.jretrowave3d.rotation;
+/*package me.zombie_striker.jretrowave3d.rotation;
 
-import com.aparapi.Kernel;
 
 public abstract class KernelRotate extends Kernel {
 
@@ -33,4 +32,4 @@ public abstract class KernelRotate extends Kernel {
 		return result_z[i];
 	}
 
-}
+}*/

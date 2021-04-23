@@ -1,5 +1,5 @@
 package me.zombie_striker.jretrowave3d.rotation;
-
+/*
 import me.zombie_striker.jretrowave3d.data.Vector3D;
 
 public class KernelRotatePitchYaw extends KernelRotate {
@@ -41,4 +41,4 @@ public class KernelRotatePitchYaw extends KernelRotate {
 		result_y[id] = y3;
 		result_z[id] = zchange;
 	}
-}
+}*/

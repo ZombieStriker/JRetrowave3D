@@ -3,22 +3,14 @@ package me.zombie_striker.jretrowave3d.utils;
 import me.zombie_striker.jretrowave3d.LightManager;
 import me.zombie_striker.jretrowave3d.World;
 import me.zombie_striker.jretrowave3d.data.*;
+import me.zombie_striker.jretrowave3d.graphics.Screen;
+import me.zombie_striker.jretrowave3d.graphics.TriangleRenderer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Draw {
-
-	public static BufferedImage render(int[][] pixels){
-		BufferedImage bi = new BufferedImage(pixels.length,pixels[0].length, BufferedImage.TYPE_INT_ARGB);
-		for(int x = 0; x < bi.getWidth(); x++) {
-			for(int y = 0; y < bi.getHeight(); y++) {
-				bi.setRGB(x,y,pixels[x][y]);
-			}
-		}
-		return bi;
-	}
 
 
 	public static void drawLine(Graphics2D bi, int startX, int startY, int endX, int endY) {
@@ -79,12 +71,9 @@ public class Draw {
 		}
 	}
 
-	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, Color color) {
-		fillTriangle(wrapper, xoff, yoff, p1, p2, p3, material, 0, color);
-	}
 
-	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, int drawExtra, Color color) {
-		int[] x = new int[3];
+	public static TriangleRenderer createTriangleRenderFor(Screen wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, Color color) {
+		/*int[] x = new int[3];
 		int[] y = new int[3];
 		int n;
 		// A simple triangle.
@@ -97,14 +86,12 @@ public class Draw {
 
 		n = 3;
 
-		fillTriangle(wrapper, xoff, yoff, x, y, n, material, drawExtra,color);
+		fillTriangle(wrapper, xoff, yoff, x, y, n, material, color);*/
+		TriangleRenderer tr = new TriangleRenderer(p1.clone().add(xoff,yoff),p2.clone().add(xoff,yoff),p3.clone().add(xoff,yoff),color);
+		return tr;
 	}
 
-	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, Color color) {
-		fillTriangle(wrapper, xoff, yoff, x, y, n, material, 0, color);
-	}
-
-	public static void fillTriangle(ScreenWrapper wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, int drawExtra, Color color) {
+	public static void createTriangleRenderFor(Screen wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, Color color) {
 		int bix = 0;
 		int biy = 0;
 		int bixmin = Integer.MAX_VALUE;
@@ -123,21 +110,17 @@ public class Draw {
 		}
 
 
-		if (bix <= 0 || biy <= 0) {
+		/*if (bix <= 0 || biy <= 0) {
 			return;
 		}
 		if (bix - bixmin <= 0 || biy - biymin <= 0) {
 			return;
-		}
+		}*/
 
 		Polygon p = new Polygon(x, y, n);
-		wrapper.addPolygon(p,color);
-
-		/*if (material != null) {
-		} else {
-			g.fillPolygon(p);
-
-		}*/
+		//wrapper.addPolygon(p,color);
+		//System.out.println("Adding triangle to render");
+		//wrapper.addTriangleToRender(new TriangleRenderer(new Vector2D(x[0],y[0]),new Vector2D(x[1],y[1]),new Vector2D(x[2],y[2])));
 
 
 	}
@@ -203,10 +186,10 @@ public class Draw {
 
 		double y1 = ((((-ydifA / (zdifA)))));
 		double y2 = ((((-ydifB / (zdifB)))));*/
-		double x1 = (((xzdistance1) / (zxdistance1)));
-		double x2 = (((xzdistance2) / (zxdistance2)));
-		double y1 = ((((-ydifA / (zxdistance1)))));
-		double y2 = ((((-ydifB / (zxdistance2)))));
+		float x1 = (float) ((xzdistance1) / (zxdistance1));
+		float x2 = (float) ((xzdistance2) / (zxdistance2));
+		float y1 = (float) (-ydifA / (zxdistance1));
+		float y2 = (float) (-ydifB / (zxdistance2));
 		Vector2D point1 = new Vector2D(x1, y1);
 		Vector2D point2 = new Vector2D(x2, y2);
 		point1.multiply(bi.getHeight() / 2);
@@ -228,11 +211,11 @@ public class Draw {
 	}
 
 
-	public static void drawTriangle(ScreenWrapper wrapper, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawRelativeToCamera) {
-		drawTriangle(wrapper, world, x, y, triangle, drawNormal, false, drawRelativeToCamera);
+	public static ObjectChain<TriangleRenderer> drawTriangle(Screen wrapper,ObjectChain<TriangleRenderer> cur, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawRelativeToCamera) {
+		return drawTriangle(wrapper,cur, world, x, y, triangle, drawNormal, false, drawRelativeToCamera);
 	}
 
-	public static void drawTriangle(ScreenWrapper wrapper, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal, boolean drawRelativeToCamra) {
+	public static ObjectChain<TriangleRenderer> drawTriangle(Screen wrapper, ObjectChain<TriangleRenderer> cur, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal, boolean drawRelativeToCamra) {
 		Color color = triangle.getColor();
 		if (drawingNormal) {
 		} else {
@@ -265,39 +248,43 @@ public class Draw {
 		xdifC = (triangle.getPoints()[2].getX() - world.camera.getLocation().getX());
 
 
-		double x1 = (((xdifA) / (zdifA)));
-		double x2 = (((xdifB) / (zdifB)));
-		double x3 = (((xdifC) / (zdifC)));
+		float x1 = (float) ((xdifA) / (zdifA));
+		float x2 = (float) ((xdifB) / (zdifB));
+		float x3 = (float) ((xdifC) / (zdifC));
 
-		double y1 = ((((-ydifA / (zdifA)))));
-		double y2 = ((((-ydifB / (zdifB)))));
-		double y3 = ((((-ydifC / (zdifC)))));
+		x1 -= 1;
+		x2 -=1;
+		x3-=1;
+
+		float y1 = (float) (ydifA / (zdifA));
+		float y2 = (float) (ydifB / (zdifB));
+		float y3 = (float) (ydifC / (zdifC));
 
 		//TODO: Check if this is working
 		if (zdifA < 0) {
 			//y1=y1;
 			if (ydifA < 0) {
-				y1 += wrapper.getHeight();
-			} else {
 				y1 -= wrapper.getHeight();
+			} else {
+				y1 += wrapper.getHeight();
 			}
 			if (xdifA < 0) {
-				x1 -= wrapper.getWidth();
+				x1 += wrapper.getWidth();
 			} else {
-				x1 -= wrapper.getWidth();
+				x1 += wrapper.getWidth();
 			}
 		}
 		if (zdifB < 0) {
 			//	y2=y2;
 			if (ydifB < 0) {
-				y2 += wrapper.getHeight();
-			} else {
 				y2 -= wrapper.getHeight();
+			} else {
+				y2 += wrapper.getHeight();
 			}
 			if (xdifB < 0) {
-				x2 -= wrapper.getWidth();
+				x2 += wrapper.getWidth();
 			} else {
-				x2 -= wrapper.getWidth();
+				x2 += wrapper.getWidth();
 			}
 			//x2+=bi.getWidth();
 			//x2=-x2;
@@ -305,14 +292,14 @@ public class Draw {
 		if (zdifC < 0) {
 			//y3=y3;
 			if (ydifC < 0) {
-				y3 += wrapper.getHeight();
-			} else {
 				y3 -= wrapper.getHeight();
+			} else {
+				y3 += wrapper.getHeight();
 			}
 			if (xdifC < 0) {
-				x3 -= wrapper.getWidth();
+				x3 += wrapper.getWidth();
 			} else {
-				x3 -= wrapper.getWidth();
+				x3 += wrapper.getWidth();
 			}
 			//	x3+=bi.getWidth();
 			//x3=-x3;
@@ -356,16 +343,18 @@ public class Draw {
 
 
 
-		fillTriangle(wrapper, x, y, point1, point2, point3, triangle.getMaterial(),color);
+		TriangleRenderer tr = createTriangleRenderFor(wrapper, x, y, point1, point2, point3, triangle.getMaterial(),color);
+		ObjectChain objectChain = new ObjectChain(tr,cur);
+		return objectChain;
 
-		if (drawNormal) {
+		/*if (drawNormal) {
 			Vector3D normal = triangle.getNormal(false);
 			normal.normalize();
 			Line line = new Line(triangle.getRelativeLocation()[0], new Vector3D(triangle.getRelativeLocation()[0].getX() - normal.getX(), triangle.getRelativeLocation()[0].getY() - normal.getY(), triangle.getRelativeLocation()[0].getZ() - normal.getZ()));
 			//g.setColor(new Color(255, 0, 255));
 			//drawLine(bi, g, world, x, y, line);
 			drawTriangle(wrapper, world, x, y, new Triangle(line.getStart(), line.getEnd(), new Vector3D(line.getEnd().getX() + 0.01f, line.getEnd().getY(), line.getEnd().getZ() + 0.1f), new Color(255, 0, 160)), false, true);
-		}
+		}*/
 		//if (color == null)
 	/*	g.setColor(new Color(255, 0, 0));
 		drawLine(g, (int) (point1.getX() + x), (int) (point1.getY() + y), (int) (point2.getX() + x), (int) (point2.getY() + y));

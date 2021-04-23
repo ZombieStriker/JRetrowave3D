@@ -1,6 +1,7 @@
 package me.zombie_striker.jretrowave3d;
 
 import me.zombie_striker.jretrowave3d.data.Vector3D;
+import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
 public class Camera {
@@ -10,10 +11,17 @@ public class Camera {
 	private double yaw = 0;
 	private double pitch = 0;
 	private double roll = 0;
-	private double fov = Math.toRadians(120);
+	private double fov = Math.toRadians(180);
 
 	public Camera(Vector3D personLocation) {
 		this.personLocation = personLocation;
+	}
+
+	public void teleport(Vector3D newLocation){
+		personLocation = newLocation;
+		for(RenderableObject renderableObject: JRetroWave3D.getGame().getWorld().getRenderableObjects()){
+			renderableObject.updateTriangles();
+		}
 	}
 
 	public double getRoll() {
@@ -36,6 +44,9 @@ public class Camera {
 			yaw += 360;
 		}
 		this.yaw = yaw % 360;
+		for(RenderableObject renderableObject: JRetroWave3D.getGame().getWorld().getRenderableObjects()){
+			renderableObject.updateTriangles();
+		}
 		//apatureLocation = new Location((int)(personLocation.getX()+ Math.cos(Math.toRadians(yaw))), personLocation.getY(), (int)(personLocation.getZ()+ Math.sin(Math.toRadians(yaw))));
 	}
 
@@ -51,6 +62,9 @@ public class Camera {
 			pitch = -90+1;
 		}
 		this.pitch = pitch;
+		for(RenderableObject renderableObject: JRetroWave3D.getGame().getWorld().getRenderableObjects()){
+			renderableObject.updateTriangles();
+		}
 		//apatureLocation = new Location((int)(personLocation.getX()+ Math.cos(Math.toRadians(yaw))), personLocation.getY(), (int)(personLocation.getZ()+ Math.sin(Math.toRadians(yaw))));
 	}
 

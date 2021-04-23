@@ -1,4 +1,4 @@
-package me.zombie_striker.jretrowave3d.rotation;
+/*package me.zombie_striker.jretrowave3d.rotation;
 
 import me.zombie_striker.jretrowave3d.data.Vector3D;
 
@@ -20,7 +20,6 @@ public class KernelRotateYawPitch extends KernelRotate {
 	}
 
 
-	@Override
 	public void run() {
 		int id = getGlobalId();
 		float sinyaw = sin(yaw[id]);
@@ -42,4 +41,4 @@ public class KernelRotateYawPitch extends KernelRotate {
 		result_y[id] = y3;
 		result_z[id] = z3;
 	}
-}
+}*/
