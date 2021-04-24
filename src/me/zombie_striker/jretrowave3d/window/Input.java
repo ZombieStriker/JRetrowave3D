@@ -10,12 +10,6 @@ public class Input extends GLFWKeyCallback {
 	public static boolean[] keys = new boolean[10000];
 	@Override
 	public void invoke(long window, int key, int scancode, int action, int mods) {
-
-		TickManager.runNextTick(new TickableObject() {
-			@Override
-			public void tick() {
-				keys[key] = (action != GLFW.GLFW_RELEASE);
-			}
-		});
+		keys[key] = (action != GLFW.GLFW_RELEASE);
 	}
 }

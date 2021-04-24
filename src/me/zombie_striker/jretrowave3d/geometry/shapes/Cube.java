@@ -75,7 +75,7 @@ public class Cube extends RenderableObject {
 		return yaw;
 	}
 
-	public void setYaw(float yaw) {
+	public void setYawRadians(float yaw) {
 		this.yaw = yaw;
 		setUpdateTrianglesWithGPU();
 		updateTriangles();
@@ -85,7 +85,7 @@ public class Cube extends RenderableObject {
 		return pitch;
 	}
 
-	public void setPitch(float pitch) {
+	public void setPitchRadians(float pitch) {
 		this.pitch = pitch;
 		setUpdateTrianglesWithGPU();
 		updateTriangles();

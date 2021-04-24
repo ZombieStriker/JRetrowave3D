@@ -36,14 +36,6 @@ public class Screen {
 		return width;
 	}
 
-	public int getPixelAt(int i) {
-		return getPixelAt(i % width, i / width);
-	}
-
-	public int getPixelAt(int x, int y) {
-		return new Color(255, 255, 255).getRGB();
-	}
-
 	public void setRenderChain(ObjectChain<TriangleRenderer> chain) {
 		this.triangleRenderers = chain;
 	}

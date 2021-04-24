@@ -26,7 +26,11 @@ public class BoxBoundingBox implements BoundingBox {
 		this.length = length;
 	}
 
-	@Override
+    public BoxBoundingBox(Vector3D location, float size) {
+		this(location,size,size,size);
+    }
+
+    @Override
 	public boolean collides(Vector3D point) {
 		if (point.getY() <= maxCorner.getY() && point.getY() >= mincorder.getY())
 			if (point.getX() <= maxCorner.getX() && point.getX() >= mincorder.getX())

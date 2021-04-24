@@ -1,18 +1,18 @@
 package me.zombie_striker.jretrowave3d.events.types;
 
 import me.zombie_striker.jretrowave3d.events.Event;
-import me.zombie_striker.jretrowave3d.physics.MovableObject;
+import me.zombie_striker.jretrowave3d.physics.TickingObject;
 
 public class ObjectFallOutOfWorldEvent extends Event {
 
 	public boolean canceled = false;
-	public MovableObject object;
+	public TickingObject object;
 
-	public ObjectFallOutOfWorldEvent(MovableObject object){
+	public ObjectFallOutOfWorldEvent(TickingObject object){
 		this.object = object;
 	}
 
-	public MovableObject getObject(){
+	public TickingObject getObject(){
 		return object;
 	}
 

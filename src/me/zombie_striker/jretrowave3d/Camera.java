@@ -11,7 +11,7 @@ public class Camera {
 	private double yaw = 0;
 	private double pitch = 0;
 	private double roll = 0;
-	private double fov = Math.toRadians(180);
+	private double fov = Math.toRadians(90);
 
 	public Camera(Vector3D personLocation) {
 		this.personLocation = personLocation;
@@ -95,6 +95,6 @@ public class Camera {
 		float z = (float) ((Math.cos(getYawRadians()) /*- Math.sin(getYawRadians())*/)*Math.cos(getPitchRadians()));
 		float y = (float) Math.sin(getPitchRadians());
 		float x = (float) ((/*Math.cos(getYawRadians())*/ - Math.sin(getYawRadians()))*Math.cos(getPitchRadians()));
-		return new Vector3D(x,-y,z);
+		return new Vector3D(x,-y,z).normalize();
 	}
 }

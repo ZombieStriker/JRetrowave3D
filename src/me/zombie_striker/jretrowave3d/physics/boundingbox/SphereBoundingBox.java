@@ -14,6 +14,7 @@ public class SphereBoundingBox implements BoundingBox{
 
 	@Override
 	public boolean collides(Vector3D point) {
+		System.out.println(center.distanceSquared(point) + " "+ distance*distance);
 		return center.distanceSquared(point) <= distance*distance;
 	}
 
@@ -32,7 +33,7 @@ public class SphereBoundingBox implements BoundingBox{
 
 	@Override
 	public boolean collides(BoundingBox box, Vector3D point, Vector3D lastLocation) {
-		return false;
+		return collides(point) || collides(lastLocation) || collides(box);
 	}
 
 	public Vector3D getCenter(){

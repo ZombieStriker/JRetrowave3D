@@ -72,6 +72,8 @@ public class Triangle {
 			v3.setZ(v3.getZ() - z);
 		}
 		LightManager.setTriangleToRelight(this);
+		updateNormal(false);
+		updateNormal(true);
 	}
 
 	public void add(float x, float y, float z) {
@@ -86,6 +88,8 @@ public class Triangle {
 			v3.setZ(v3.getZ() + z);
 		}
 		LightManager.setTriangleToRelight(this);
+		updateNormal(false);
+		updateNormal(true);
 	}
 
 	public Vector3D getNormal(boolean trueVertexes){
@@ -147,11 +151,7 @@ public class Triangle {
 	}
 
 	public double getAverageDistance(World world) {
-		double dis = 0;
-		dis += MathUtil.distanceSquared(triangle[0], world.camera.getLocation());
-		dis += MathUtil.distanceSquared(triangle[1], world.camera.getLocation());
-		dis += MathUtil.distanceSquared(triangle[2], world.camera.getLocation());
-		return Math.sqrt(dis) / 3;
+		return Math.sqrt(getAverageDistance(world));
 	}
 
 	public Vector3D[] getTrues() {
@@ -162,7 +162,7 @@ public class Triangle {
 		return triangle;
 	}
 
-	public Double getFurthestDistance(World world) {
+	public Float getFurthestDistance(World world) {
 		double dis = MathUtil.distanceSquared(triangle[0], world.camera.getLocation());
 		double temp = MathUtil.distanceSquared(triangle[1], world.camera.getLocation());
 		if (temp > dis)
@@ -170,7 +170,7 @@ public class Triangle {
 		temp = MathUtil.distanceSquared(triangle[2], world.camera.getLocation());
 		if (temp > dis)
 			dis = temp;
-		return Math.sqrt(dis);
+		return (float)Math.sqrt(dis);
 	}
 
 	public Float getClosestDistance(World world) {
@@ -204,4 +204,23 @@ public class Triangle {
 
 		return new Vector3D((maxwidth+minwidth)/2,(maxheight+minheight)/2,(maxlength+minlength)/2);
 	}
+
+
+	private boolean calclight = true;
+	public boolean shouldCalculateLight() {
+	return calclight;
+	}
+	public void setCalclight(boolean b){
+		this.calclight = b;
+	}
+
+    public Float getCenterDistance(World world) {
+		Vector3D center = new Vector3D(
+				(triangle[0].getX()+triangle[1].getX()+triangle[2].getX())/3,
+		(triangle[0].getY()+triangle[1].getY()+triangle[2].getY())/3,
+		(triangle[0].getZ()+triangle[1].getZ()+triangle[2].getZ())/3
+		);
+		float dis = MathUtil.distanceSquared(center, world.camera.getLocation());
+		return (float)Math.sqrt(dis);
+    }
 }

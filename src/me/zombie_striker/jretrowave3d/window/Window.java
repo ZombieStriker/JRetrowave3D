@@ -113,30 +113,8 @@ public class Window implements Runnable {
 		glfwSwapBuffers(window);
 	}
 
-	private boolean[] lastCheckedInput = new boolean[1000];
-
 	private void update() {
 		glfwPollEvents();
-		for(Key key : Key.values()){
-			if(lastCheckedInput[key.getKeyCode()]!=Input.keys[key.getKeyCode()]){
-				if(Input.keys[key.getKeyCode()]){
-					TickManager.registerTickableObject(new TickableObject() {
-						@Override
-						public void tick() {
-							JRetroWave3D.callKey(key,true);
-						}
-					});
-				}else{
-					TickManager.registerTickableObject(new TickableObject() {
-						@Override
-						public void tick() {
-							JRetroWave3D.callKey(key,false);
-						}
-					});
-				}
-				lastCheckedInput[key.getKeyCode()]=Input.keys[key.getKeyCode()];
-			}
-		}
 	}
 
 	public void setSize(int w, int h) {

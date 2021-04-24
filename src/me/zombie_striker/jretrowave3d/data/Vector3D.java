@@ -117,11 +117,12 @@ public class Vector3D {
 		return Math.sqrt(distanceSquared(new Vector3D(0, 0, 0)));
 	}
 
-	public void normalize() {
+	public Vector3D normalize() {
 		double length = length();
 		this.x /= length;
 		this.y /= length;
 		this.z /= length;
+		return this;
 	}
 
 	public Vector3D add(double x, double y, double z) {
@@ -130,4 +131,14 @@ public class Vector3D {
 		this.z += z;
 		return this;
 	}
+	public Vector3D subtract(double x, double y, double z) {
+		this.x -= x;
+		this.y -= y;
+		this.z -= z;
+		return this;
+	}
+
+    public float distance(Vector3D location) {
+		return (float) Math.sqrt(distanceSquared(location));
+    }
 }

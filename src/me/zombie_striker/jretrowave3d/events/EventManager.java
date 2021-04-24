@@ -15,7 +15,7 @@ public class EventManager {
 	public static void call(Event event){
 		for(Listener listener : listeners){
 			for(Method method : listener.getClass().getMethods()){
-				if(method.getParameterTypes().length==1&&event.getClass().isInstance(method.getParameterTypes()[0])){
+				if(method.getParameterTypes().length==1&&(method.getParameterTypes()[0].isInstance(event))){
 					try {
 						method.invoke(listener,event);
 					} catch (IllegalAccessException e) {

@@ -33,22 +33,43 @@ public enum Key {
 	LSHIFT(GLFW_KEY_LEFT_SHIFT),
 
 	SPACE(GLFW_KEY_SPACE),
+	E(GLFW_KEY_E),
+	T(GLFW_KEY_T),
+	Y(GLFW_KEY_Y),
+	U(GLFW_KEY_U),
+	I(GLFW_KEY_I),
+	O(GLFW_KEY_O),
+	F(GLFW_KEY_F),
+	G(GLFW_KEY_H),
+	H(GLFW_KEY_H),
+	J(GLFW_KEY_J),
+	K(GLFW_KEY_K),
+	L(GLFW_KEY_L),
+	B(GLFW_KEY_L),
+	N(GLFW_KEY_L),
+	M(GLFW_KEY_L),
+	PERIOD(GLFW_KEY_PERIOD),
+	COMMA(GLFW_KEY_COMMA),
+	MINUS(GLFW_KEY_MINUS),
+	EQUALS(GLFW_KEY_EQUAL),
 	;
 
 	private int keycode;
 
-	private Key(int keycode){
+	private Key(int keycode) {
 		this.keycode = keycode;
 	}
-	public int getKeyCode(){
-		return keycode;
-	}
-	public static Key getKey(int keycode){
-		for(Key k : values()){
-			if(k.getKeyCode()==keycode)
+
+	public static Key getKey(int keycode) {
+		for (Key k : values()) {
+			if (k.getKeyCode() == keycode)
 				return k;
 		}
 		return null;
+	}
+
+	public int getKeyCode() {
+		return keycode;
 	}
 
 }

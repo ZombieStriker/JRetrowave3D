@@ -8,7 +8,7 @@ import me.zombie_striker.jretrowave3d.events.types.ProjectileHitEvent;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
-public class ProjectileObject extends MovableObject{
+public class ProjectileObject extends TickingObject {
 
 	public ProjectileObject(World world,Vector3D velocity, Vector3D location, BoundingBox box, RenderableObject renderableObject) {
 		super(world, location, box, renderableObject);
@@ -19,7 +19,6 @@ public class ProjectileObject extends MovableObject{
 	public void tick() {
 		if (hasGravity())
 			this.getVelocity().setY(this.getVelocity().getY() + getGravityPerTick());
-		//System.out.println(this.velocity.getY());
 		if (hasVelocity()) {
 			Vector3D current = new Vector3D(getLocation());
 			Vector3D goingTo = new Vector3D(getLocation());
@@ -28,7 +27,7 @@ public class ProjectileObject extends MovableObject{
 			for (BoundingBox box : getWorld().getBoundingBoxes()) {
 				if (box != getBoundingBox() && box.collides(getBoundingBox(), goingTo, current)) {
 
-					ProjectileHitEvent event = new ProjectileHitEvent(this,getWorld());
+					ProjectileHitEvent event = new ProjectileHitEvent(this,box,getWorld());
 					EventManager.call(event);
 					if(!event.isCanceled()){
 						getWorld().removeBoundingBox(getBoundingBox());

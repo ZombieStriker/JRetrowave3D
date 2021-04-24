@@ -24,55 +24,6 @@ public abstract class RenderableObject {
 		updateWithGPU = true;
 	}
 
-	public static boolean shouldUpdateWithGPU() {
-		return updateWithGPU;
-	}
-
-	public static void updateTrianglesGPU() {
-		/*
-		rotatableWrapperScreenRel.standardize();
-		if(rotatableWrapperScreenRel.getResultLength()>0) {
-			Range range = Range.create(MathUtil.getMultipleClosestTo(rotatableWrapperScreenRel.getResultLength(),256));
-			KernelRotatePitchYaw rotateRel = new KernelRotatePitchYaw(rotatableWrapperScreenRel);
-			System.out.println(rotatableWrapperScreenRel.getResultLength() + "===" + range.getLocalSize_0() + " " + range.getLocalSize_1() + " " + range.getLocalSize_2() + "  || " + range.getGlobalSize_0() + " " + range.getLocalSize_1() + " " + range.getGlobalSize_2());
-			rotateRel.execute(range);
-			for(int i = 0; i < rotateRel.getSize(); i++){
-				Vector3D v = rotatableWrapperScreenRel.getPointer(i);
-				v.setX(rotateRel.getResultX(i));
-				v.setY(rotateRel.getResultY(i));
-				v.setZ(rotateRel.getResultZ(i));
-			}
-		}
-		rotatableWrapper1.standardize();
-		if(rotatableWrapper1.getResultLength()>0) {
-
-			Range range2 = Range.create(MathUtil.getMultipleClosestTo(rotatableWrapper1.getResultLength(),256));
-			System.out.println("W1 "+rotatableWrapper1.getResultLength() + "===" + range2.getLocalSize_0() + " " + range2.getLocalSize_1() + " " + range2.getLocalSize_2() + "  || " + range2.getGlobalSize_0() + " " + range2.getLocalSize_1() + " " + range2.getGlobalSize_2());
-			KernelRotatePitchYaw rotate1 = new KernelRotatePitchYaw(rotatableWrapper1);
-			rotate1.execute(range2);
-
-			for (int i = 0; i < rotatableWrapper1.getResultLength(); i++) {
-				rotatableWrapper2.add(new Vector3D(rotatableWrapper1.getResultX(i), rotatableWrapper1.getResultY(i), rotatableWrapper1.getResultZ(i)), JRetroWave3D.getGame().getWorld().camera.getLocation(), -JRetroWave3D.getGame().getWorld().camera.getYawRadians(), JRetroWave3D.getGame().getWorld().camera.getPitchRadians());
-			}
-			rotatableWrapper2.standardize();
-			Range range3 = Range.create(MathUtil.getMultipleClosestTo(rotatableWrapper2.getResultLength(),256));
-			KernelRotateYawPitch rotate2 = new KernelRotateYawPitch(rotatableWrapper2);
-			rotate2.execute(range3);
-
-			for (int i = 0; i < rotate2.getSize(); i++) {
-				Vector3D v = rotatableWrapper2.getPointer(i);
-				v.setX(rotate2.getResultX(i));
-				v.setY(rotate2.getResultY(i));
-				v.setZ(rotate2.getResultZ(i));
-			}
-		}
-		rotatableWrapperScreenRel.clear();
-		rotatableWrapper1.clear();
-		rotatableWrapper2.clear();
-*/
-
-	}
-
 	public abstract Vector3D getLocation();
 
 	public abstract Triangle[] getTrianglesForRendering(World world);
@@ -85,11 +36,11 @@ public abstract class RenderableObject {
 
 	public abstract float getYaw();
 
-	public abstract void setYaw(float yaw);
+	public abstract void setYawRadians(float yaw);
 
 	public abstract float getPitch();
 
-	public abstract void setPitch(float pitch);
+	public abstract void setPitchRadians(float pitch);
 
 	public Triangle[] getTriangles() {
 		return triangles;
@@ -106,14 +57,16 @@ public abstract class RenderableObject {
 				for (int i = 0; i < t.getTrues().length; i++) {
 					t.getRelativeLocation()[i] = new Vector3D(t.getTrues()[i]);
 
-					t.getRelativeLocation()[i].rotatePitch(getPitch(), getCenter(JRetroWave3D.getGame().getWorld()));
-					t.getRelativeLocation()[i].rotateYaw(getYaw(), getCenter(JRetroWave3D.getGame().getWorld()));
+					t.getRelativeLocation()[i].rotatePitch(getPitch(),getLocation());// getCenter(JRetroWave3D.getGame().getWorld()));
+					t.getRelativeLocation()[i].rotateYaw(getYaw(),getLocation());// getCenter(JRetroWave3D.getGame().getWorld()));
 					if (!isRelativeToScreen) {
 						t.getRelativeLocation()[i].rotateYaw(-JRetroWave3D.getGame().getWorld().camera.getYawRadians(), JRetroWave3D.getGame().getWorld().camera.getLocation());
 						t.getRelativeLocation()[i].rotatePitch(JRetroWave3D.getGame().getWorld().camera.getPitchRadians(), JRetroWave3D.getGame().getWorld().camera.getLocation());
 					}
 				}
 			LightManager.setTriangleToRelight(t);
+			t.updateNormal(false);
+			t.updateNormal(true);
 		}
 	}
 
@@ -123,6 +76,12 @@ public abstract class RenderableObject {
 
 	public void setRelativeToScreen(boolean b) {
 		this.isRelativeToScreen = b;
+	}
+
+	public void setCalculateLightColor(boolean b){
+		for(Triangle t : getTriangles()){
+			t.setCalclight(b);
+		}
 	}
 
 	public abstract RenderableObject clone();

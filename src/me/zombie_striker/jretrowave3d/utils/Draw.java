@@ -72,59 +72,10 @@ public class Draw {
 	}
 
 
-	public static TriangleRenderer createTriangleRenderFor(Screen wrapper, int xoff, int yoff, Vector2D p1, Vector2D p2, Vector2D p3, Material material, Color color) {
-		/*int[] x = new int[3];
-		int[] y = new int[3];
-		int n;
-		// A simple triangle.
-		x[0] = (int) (xoff + p1.getX());
-		x[1] = (int) (xoff + p2.getX());
-		x[2] = (int) (xoff + p3.getX());
-		y[0] = (int) (yoff + p1.getY());
-		y[1] = (int) (yoff + p2.getY());
-		y[2] = (int) (yoff + p3.getY());
-
-		n = 3;
-
-		fillTriangle(wrapper, xoff, yoff, x, y, n, material, color);*/
-		TriangleRenderer tr = new TriangleRenderer(p1.clone().add(xoff,yoff),p2.clone().add(xoff,yoff),p3.clone().add(xoff,yoff),color);
+	public static TriangleRenderer createTriangleRenderFor(Screen wrapper, Vector2D p1, Vector2D p2, Vector2D p3, Material material, Color color) {
+		TriangleRenderer tr = new TriangleRenderer(p1, p2, p3, color);
 		return tr;
 	}
-
-	public static void createTriangleRenderFor(Screen wrapper, int xoff, int yoff, int[] x, int[] y, int n, Material material, Color color) {
-		int bix = 0;
-		int biy = 0;
-		int bixmin = Integer.MAX_VALUE;
-		int biymin = Integer.MAX_VALUE;
-		for (int temp : x) {
-			if (temp > bix)
-				bix = temp;
-			if (temp < bixmin)
-				bixmin = temp;
-		}
-		for (int temp : y) {
-			if (temp > biy)
-				biy = temp;
-			if (temp < biymin)
-				biymin = temp;
-		}
-
-
-		/*if (bix <= 0 || biy <= 0) {
-			return;
-		}
-		if (bix - bixmin <= 0 || biy - biymin <= 0) {
-			return;
-		}*/
-
-		Polygon p = new Polygon(x, y, n);
-		//wrapper.addPolygon(p,color);
-		//System.out.println("Adding triangle to render");
-		//wrapper.addTriangleToRender(new TriangleRenderer(new Vector2D(x[0],y[0]),new Vector2D(x[1],y[1]),new Vector2D(x[2],y[2])));
-
-
-	}
-
 
 	public static BufferedImage resize(BufferedImage img,
 									   int width, int height, double slope, double slope2, double slope3) throws IOException {
@@ -211,17 +162,11 @@ public class Draw {
 	}
 
 
-	public static ObjectChain<TriangleRenderer> drawTriangle(Screen wrapper,ObjectChain<TriangleRenderer> cur, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawRelativeToCamera) {
-		return drawTriangle(wrapper,cur, world, x, y, triangle, drawNormal, false, drawRelativeToCamera);
-	}
 
-	public static ObjectChain<TriangleRenderer> drawTriangle(Screen wrapper, ObjectChain<TriangleRenderer> cur, World world, int x, int y, Triangle triangle, boolean drawNormal, boolean drawingNormal, boolean drawRelativeToCamra) {
+	public static ObjectChain<TriangleRenderer> drawTriangle(Screen wrapper, ObjectChain<TriangleRenderer> cur, World world, Triangle triangle, boolean drawRelativeToCamra) {
 		Color color = triangle.getColor();
-		if (drawingNormal) {
-		} else {
-			if (triangle.getColor() != null)
-				color = (LightManager.getColorFromLightsources(triangle, world,false));
-		}
+		if (triangle.shouldCalculateLight() && triangle.getColor() != null)
+			color = (LightManager.getColorFromLightsources(triangle, world, false));
 
 		double zdifA;
 		double ydifA;
@@ -243,6 +188,7 @@ public class Draw {
 		ydifB = (triangle.getPoints()[1].getY() - world.camera.getLocation().getY());
 		xdifB = (triangle.getPoints()[1].getX() - world.camera.getLocation().getX());
 
+
 		zdifC = (triangle.getPoints()[2].getZ() - world.camera.getLocation().getZ());
 		ydifC = (triangle.getPoints()[2].getY() - world.camera.getLocation().getY());
 		xdifC = (triangle.getPoints()[2].getX() - world.camera.getLocation().getX());
@@ -252,16 +198,37 @@ public class Draw {
 		float x2 = (float) ((xdifB) / (zdifB));
 		float x3 = (float) ((xdifC) / (zdifC));
 
-		x1 -= 1;
-		x2 -=1;
-		x3-=1;
-
 		float y1 = (float) (ydifA / (zdifA));
 		float y2 = (float) (ydifB / (zdifB));
 		float y3 = (float) (ydifC / (zdifC));
 
-		//TODO: Check if this is working
 		if (zdifA < 0) {
+			y1 = -wrapper.getHeight();
+			if (xdifA < 0) {
+				x1 = -wrapper.getWidth();
+			} else {
+				x1 = wrapper.getWidth();
+			}
+		}
+		if (zdifB < 0) {
+			y2 = -wrapper.getHeight();
+			if (xdifB < 0) {
+				x2 = -wrapper.getWidth();
+			} else {
+				x2 = wrapper.getWidth();
+			}
+		}
+		if (zdifC < 0) {
+			y3 = -wrapper.getHeight();
+			if (xdifC < 0) {
+				x2 = -wrapper.getWidth();
+			} else {
+				x2 = wrapper.getWidth();
+			}
+		}
+
+		//TODO: Check if this is working
+		/*if (zdifA < 0) {
 			//y1=y1;
 			if (ydifA < 0) {
 				y1 -= wrapper.getHeight();
@@ -303,48 +270,18 @@ public class Draw {
 			}
 			//	x3+=bi.getWidth();
 			//x3=-x3;
-		}
+		}*/
 
 		Vector2D point1 = new Vector2D(x1, y1);
 		Vector2D point2 = new Vector2D(x2, y2);
 		Vector2D point3 = new Vector2D(x3, y3);
 
-		point1.multiply(wrapper.getHeight() / 2);
-		point2.multiply(wrapper.getHeight() / 2);
-		point3.multiply(wrapper.getHeight() / 2);
+		point1.multiply(wrapper.getWidth());
+		point2.multiply(wrapper.getWidth());
+		point3.multiply(wrapper.getWidth());
 
-		if (point1.isInfinite()) {
-			if (Double.isInfinite(point1.getX())) {
-				point1.setX(wrapper.getWidth());
-			}
-			if (Double.isInfinite(point1.getY())) {
-				point1.setY(wrapper.getHeight());
-			}
-			System.out.println("p1 " + point1.getX() + " " + point1.getY());
-		}
-		if (point2.isInfinite()) {
-			if (Double.isInfinite(point2.getX())) {
-				point2.setX(wrapper.getWidth());
-			}
-			if (Double.isInfinite(point2.getY())) {
-				point2.setY(wrapper.getHeight());
-			}
-			System.out.println("p2 " + point2.getX() + " " + point2.getY());
-		}
-		if (point3.isInfinite()) {
-			if (Double.isInfinite(point3.getX())) {
-				point3.setX(wrapper.getWidth());
-			}
-			if (Double.isInfinite(point3.getY())) {
-				point3.setY(wrapper.getHeight());
-			}
-			System.out.println("p3 " + point3.getX() + " " + point3.getY());
-		}
-
-
-
-		TriangleRenderer tr = createTriangleRenderFor(wrapper, x, y, point1, point2, point3, triangle.getMaterial(),color);
-		ObjectChain objectChain = new ObjectChain(tr,cur);
+		TriangleRenderer tr = createTriangleRenderFor(wrapper, point1, point2, point3, triangle.getMaterial(), color);
+		ObjectChain objectChain = new ObjectChain(tr, cur);
 		return objectChain;
 
 		/*if (drawNormal) {

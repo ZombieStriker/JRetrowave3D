@@ -60,6 +60,14 @@ public class World {
 								}
 							}
 							double theta = Math.atan((camera.getLocation().getX() - loc.getX()) / (camera.getLocation().getZ() - loc.getZ()));
+							/*if(!renderableObject.isRelativeToScreen()) {
+								if (Math.sin(camera.getFOV() / 2) * loc.distance(camera.getLocation()) < loc.getX() - camera.getDirection().getX())
+									continue;
+								if (Math.sin(camera.getFOV() / 2) * loc.distance(camera.getLocation()) < camera.getDirection().getX() - loc.getX())
+									continue;
+							}*/
+							Vector3D normal = t.getNormal(false).normalize();
+
 							if (theta - (camera.getFOV() / 2) >= 0 && theta - (camera.getFOV() / 2) <= camera.getFOV()) {
 								continue;
 							} else if (-theta - (camera.getFOV() / 2) >= 0 && -theta - (camera.getFOV() / 2) <= camera.getFOV()) {
@@ -74,7 +82,7 @@ public class World {
 						//}
 					}
 					if (pointInFieldOfView) {
-						triangleMap.put(t, t.getClosestDistance(this));
+						triangleMap.put(t, t.getCenterDistance(this));
 						triangleHeightDifMap.put(t, Math.abs(t.getCenter().getY() - camera.getLocation().getY()));
 						if (renderableObject.isRelativeToScreen())
 							shouldDrawRelToScreen.add(t);
@@ -111,9 +119,9 @@ public class World {
 		ObjectChain<TriangleRenderer> cur = currentChain;
 
 		if (screen != null)
-			for (Triangle plane : sortedMap.keySet()) {
-				if (plane != null) {
-					cur = Draw.drawTriangle(screen, cur, this, (int) (((screen.getWidth() / 3))), (int) ((screen.getHeight() / 3)), plane, false, !shouldDrawRelToScreen.contains(plane));
+			for (Triangle triangle : sortedMap.keySet()) {
+				if (triangle != null) {
+					cur = Draw.drawTriangle(screen, cur, this, triangle, !shouldDrawRelToScreen.contains(triangle));
 				}
 			}
 		return cur;
@@ -145,7 +153,7 @@ public class World {
 
 	public boolean boundingBoxCollidesWith(BoundingBox box) {
 		for (BoundingBox boundingBox : boundingBoxes) {
-			if (boundingBox.collides(box))
+			if (box.collides(boundingBox))
 				return true;
 		}
 		return false;

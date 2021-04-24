@@ -3,19 +3,22 @@ package me.zombie_striker.jretrowave3d;
 import me.zombie_striker.jretrowave3d.data.TickableObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TickManager {
 
-	private static List<TickableObject> ticks = new ArrayList<>();
-	private static List<TickableObject> delayedTicks = new ArrayList<>();
+	private static List<TickableObject> ticks = new LinkedList<>();
+	private static List<TickableObject> delayedTicks = new LinkedList<>();
 
 	public static void tick(){
-		for(TickableObject tick : new ArrayList<>(delayedTicks)){
+		for(TickableObject tick : new LinkedList<>(delayedTicks)){
+			if(tick!=null)
 			tick.tick();
 		}
 		delayedTicks.clear();
-		for(TickableObject tick : new ArrayList<>(ticks)){
+		for(TickableObject tick : new LinkedList<>(ticks)){
+			if(tick!=null)
 			tick.tick();
 		}
 	}

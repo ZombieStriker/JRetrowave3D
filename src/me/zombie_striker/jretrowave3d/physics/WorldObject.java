@@ -45,8 +45,31 @@ public abstract class WorldObject {
 		//Vector3D difference = new Vector3D(this.location.getX()-location.getX(),this.location.getY()-location.getY(),this.getLocation().getZ()-location.getZ());
 		if(box!=null)
 		box.teleport(location);
+		if(render!=null)
 		render.teleport(location);
 		this.location = location;
+	}
+	public void move(Vector3D difference){
+		if(box!=null){
+			box.teleport(box.getLocation().clone().add(difference));
+		}
+		if(render !=null){
+			render.teleport(render.getLocation().clone().add(difference));
+		}
+		this.location.add(difference);
+	}
+
+	public static RenderableObject teleportAndSetSize(RenderableObject shape, Vector3D location, float x , float y , float z){
+		shape.teleport(location);
+		shape.setSize(x,y,z);
+		return shape;
+	}
+
+	public void remove(){
+		if(getRender()!=null)
+		getWorld().removeToRender(getRender());
+		if(box!=null)
+		getWorld().removeBoundingBox(getBoundingBox());
 	}
 
 }

@@ -10,14 +10,14 @@ import me.zombie_striker.jretrowave3d.events.types.ProjectileHitEvent;
 import me.zombie_striker.jretrowave3d.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.physics.boundingbox.BoundingBox;
 
-public class MovableObject extends WorldObject implements TickableObject {
+public class TickingObject extends WorldObject implements TickableObject {
 
 	private float gravityPerTick = -0.002f;
 	private Vector3D velocity = new Vector3D(0, 0, 0);
 	private boolean applyGravity = true;
 	private boolean hasVelocity = true;
 
-	public MovableObject(World world, Vector3D location, BoundingBox box, RenderableObject renderableObject) {
+	public TickingObject(World world, Vector3D location, BoundingBox box, RenderableObject renderableObject) {
 		super(world, location, box, renderableObject);
 		TickManager.registerTickableObject(this);
 	}
