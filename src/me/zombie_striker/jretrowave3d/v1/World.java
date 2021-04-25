@@ -1,6 +1,5 @@
 package me.zombie_striker.jretrowave3d.v1;
 
-import me.zombie_striker.jretrowave3d.data.*;
 import me.zombie_striker.jretrowave3d.v1.geometry.RenderableObject;
 import me.zombie_striker.jretrowave3d.v1.rendering.Screen;
 import me.zombie_striker.jretrowave3d.v1.rendering.TriangleRenderer;

@@ -88,7 +88,6 @@ public class Window implements Runnable {
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
-		glActiveTexture(GL_TEXTURE1);
 
 		Shader.loadAll();
 

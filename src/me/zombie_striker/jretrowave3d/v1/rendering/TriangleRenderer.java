@@ -14,8 +14,6 @@ public class TriangleRenderer {
 	private ColorTexture texture;
 	private Color tempColor;
 
-	private static Texture texture_test;
-
 	/*public TriangleRenderer(Vector2D p1, Vector2D p2, Vector2D p3, Color color) {
 		this.tempColor = color;
 
@@ -47,9 +45,6 @@ public class TriangleRenderer {
 				0, 0,
 				0, 0
 		};
-		if(texture_test==null){
-			texture_test = new Texture("/textures/test.png");
-		}
 
 		if (texture == null)
 			this.texture = ColorTexture.getColorTexture(tempColor);
@@ -60,10 +55,10 @@ public class TriangleRenderer {
 			triangle = new VertexArray(vertices, indices, tcs, tempColor);
 			rendersForColor.put(tempColor, triangle);
 		}
-		texture_test.bind();
+		texture.bind();
 		Shader.SCREEN.enable();
 		triangle.render();
 		Shader.SCREEN.disable();
-		texture_test.unbind();
+		texture.unbind();
 	}
 }
